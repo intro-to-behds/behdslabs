@@ -14,25 +14,32 @@ pr_death_counts <- map_df(x, function(s){
   header <- tmp[-1]
   tail_index  <- str_which(s, "Total")
   n <- str_count(s, "\\d+")
-  out <- c(1:header_index, which(n == 1), 
+  out <- c(1:header_index, which(n <= 3), 
            which(n >= 28 & n <= 31), tail_index:length(s))
-  s <- s[-out] |>  str_remove_all("[^\\d\\s]") |> str_trim() |>
-    str_split_fixed("\\s+", n = 6) 
+  
+  if (month == "FEB") {
+    feb29 <- s[str_detect(s, "^29\\s+")] |> str_remove("29\\s+") |> parse_number()
+  }
+  s <- s[-out] |>  
+    str_remove_all("[^\\d\\s]") |> ## remove things that are not digits or space
+    str_trim() |> 
+    str_split_fixed("\\s+", n = 6)  ## split by any space
+  
   s <- s[,1:5]
   colnames(s) <- c("day", header)
-  s |> as_tibble(validate = FALSE) |> 
+  s <- s |> as_tibble(validate = FALSE) |> 
     mutate(month = month, day = as.numeric(day)) |>
     pivot_longer(-c(day, month), names_to = "year", values_to = "deaths") |>
-    mutate(deaths = as.numeric(deaths))
-}) |>  mutate(month = recode(month, 
-                             "JAN" = 1, "FEB" = 2, "MAR" = 3, 
-                             "APR" = 4, "MAY" = 5, "JUN" = 6, 
-                             "JUL" = 7, "AGO" = 8, "SEP" = 9, 
-                             "OCT" = 10, "NOV" = 11, "DEC" = 12)) |>
-  mutate(date = make_date(year, month, day)) |>
-  select(date, deaths) |>
-  arrange(date)
+    mutate(deaths = as.integer(deaths), month = str_to_title(month)) |>
+    mutate(month = if_else(month == "Ago", "Aug", month)) |>
+    mutate(month = match(month, month.abb)) |>
+    mutate(date = make_date(year, month, day)) |>
+    select(date, deaths) 
+  if (month == "FEB") {
+    s <- bind_rows(s, data.frame(date = make_date(2016, 2, 29), deaths = feb29)) 
+  }
+  return(s)
+}) |> arrange(date) |> filter(date <= make_date(2018, 4, 15)) |> as.data.frame()
 
-  
 save(pr_death_counts, file = "data/pr-death-counts.rda", compress = "xz", version = 2)
   

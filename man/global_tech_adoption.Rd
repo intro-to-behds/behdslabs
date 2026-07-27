@@ -10,7 +10,7 @@ An object of class \code{"data.frame"}.
 \source{
 Original \code{dslabs::gapminder} values (Irizarry & Gill).
   \code{population} -> \code{active_user_base}; \code{fertility} ->
-  \code{devices_owned_per_capita}; \code{infant_mortality} ->
+  \code{avg_price_per_app_usd}; \code{infant_mortality} ->
   \code{app_uninstall_rate_per_1000} (both unchanged numerically);
   \code{life_expectancy} -> \code{avg_daily_screen_time_hours}, linearly
   rescaled from its original ~30-85 year range to a ~1-10 hour range.
@@ -22,7 +22,7 @@ global_tech_adoption
 }
 \description{
 Country-level technology-adoption indicators over time -- active user
-base, devices owned per capita, app uninstall rate, average daily screen
+base, average app price, app uninstall rate, average daily screen
 time, and per-capita economic output -- used for longitudinal and
 cross-country comparisons.
 }
@@ -34,7 +34,8 @@ cross-country comparisons.
   \item region. Geographical region.
   \item gdp. Gross domestic product, current US dollars.
   \item active_user_base. Number of active users (population).
-  \item devices_owned_per_capita. Devices owned per capita.
+  \item avg_price_per_app_usd. Average price paid per app, in US dollars
+    (PPP-adjusted).
   \item app_uninstall_rate_per_1000. App uninstalls per 1,000 installs
     within 30 days.
   \item avg_daily_screen_time_hours. Average daily screen time, in hours.
@@ -45,7 +46,13 @@ cross-country comparisons.
 infant mortality/GDP across countries applies to the digital divide --
 internet penetration, smartphone adoption, and digital-literacy scores
 across countries/income levels. Has the gap converged over decades, the
-way life expectancy gaps did? \code{gdp/active_user_base/365} is used
+way life expectancy gaps did? Note the two rescaled/relabeled axes were
+deliberately chosen to keep the original trend directions intact:
+\code{avg_price_per_app_usd} (from \code{fertility}) declines over
+decades just as \code{fertility} did, which reads naturally as app
+pricing maturing toward freemium models; \code{avg_daily_screen_time_hours}
+(from \code{life_expectancy}) rises over decades just as
+\code{life_expectancy} did. \code{gdp/active_user_base/365} is used
 downstream as a "revenue per active user per day" metric, replacing the
 original dollars-a-day poverty framing with a digital-monetization-divide
 story.

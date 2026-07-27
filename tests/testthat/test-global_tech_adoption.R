@@ -5,7 +5,7 @@ test_that("global_tech_adoption preserves unchanged gapminder columns exactly", 
   expect_equal(global_tech_adoption$region, gapminder$region)
   expect_equal(global_tech_adoption$gdp, gapminder$gdp)
   expect_equal(global_tech_adoption$active_user_base, gapminder$population)
-  expect_equal(global_tech_adoption$devices_owned_per_capita, gapminder$fertility)
+  expect_equal(global_tech_adoption$avg_price_per_app_usd, gapminder$fertility)
   expect_equal(global_tech_adoption$app_uninstall_rate_per_1000, gapminder$infant_mortality)
 })
 

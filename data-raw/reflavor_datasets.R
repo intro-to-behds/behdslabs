@@ -171,7 +171,7 @@ global_tech_adoption <- data.frame(
   region = gapminder$region,
   gdp = gapminder$gdp,
   active_user_base = gapminder$population,
-  devices_owned_per_capita = gapminder$fertility,
+  avg_price_per_app_usd = gapminder$fertility,
   app_uninstall_rate_per_1000 = gapminder$infant_mortality,
   avg_daily_screen_time_hours = .rescale_screen_time(gapminder$life_expectancy)
 )

@@ -2,7 +2,7 @@
 % Please edit documentation in R/ds_theme_set.R
 \name{ds_theme_set}
 \alias{ds_theme_set}
-\title{dslabs theme set}
+\title{behdslabs theme set}
 \usage{
 ds_theme_set(
   new = "theme_bw",

@@ -4,7 +4,7 @@ library(lubridate)
 library(purrr)
 library(pdftools)
 
-fn <- system.file("extdata", "RD-Mortality-Report_2015-18-180531.pdf", package = "dslabs")
+fn <- system.file("extdata", "RD-Mortality-Report_2015-18-180531.pdf", package = "behdslabs")
 x <- str_split(pdf_text(fn), "\n")
 pr_death_counts <- map_df(x, function(s){
   s <- str_trim(s)

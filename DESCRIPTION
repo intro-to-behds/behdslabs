@@ -1,4 +1,4 @@
-Package: dslabs
+Package: behdslabs
 Title: Data Science Labs
 Version: 0.9.0
 Description: Datasets and functions that can be used for data analysis practice, homework and projects in data science courses and workshops. Forked as behdslabs for the Behavioural Data Science course (PS3140, Cognitive Science for Human-Centric Technologies, UniPD), with a set of datasets relabeled with a digital-technology / wearable / neurophysiological theme. NOTE: these relabeled datasets are not real behavioural, usage, or physiological data -- they are the original dslabs datasets (Irizarry & Gill), renamed and in some cases linearly rescaled for narrative fit. A synthetic or real, ethically-sourced replacement is planned for a future release.

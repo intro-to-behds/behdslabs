@@ -29,6 +29,28 @@
 #'   ethically-sourced replacement is planned for a future release (see
 #'   \code{BDS_development_plan.md} Phase 2).
 #'
+#' @details
+#' **Teaching connection:** app A/B testing and conversion funnels often
+#' show Simpson's paradox: an interface variant that looks worse overall
+#' can be better within every individual task. Checking whether an
+#' aggregate completion-rate difference between devices holds up once you
+#' condition on task is the same analytical move used to tell a genuine
+#' UX improvement apart from a mix-of-proportions artifact.
+#'
 #' @examples
 #' app_task_completion
+#'
+#' # Overall completion rate by device -- which looks better in aggregate?
+#' library(dplyr)
+#' app_task_completion |>
+#'   group_by(device) |>
+#'   summarise(overall_completion = sum(completion_rate * n_attempts) / sum(n_attempts))
+#'
+#' # Now break down by task. Does the device difference persist within each task?
+#' library(ggplot2)
+#' app_task_completion |>
+#'   ggplot(aes(x = task, y = completion_rate, fill = device)) +
+#'   geom_bar(stat = "identity", position = "dodge") +
+#'   labs(title = "Completion rate by task and device",
+#'        x = "Task", y = "Completion rate (%)")
 "app_task_completion"

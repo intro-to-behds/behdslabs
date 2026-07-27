@@ -8,8 +8,12 @@ Course planning lives in the separate course hub: `/Users/giorgioarcara/Document
 
 ## Adaptation rule
 
-Original datasets (murders, baseball, elections, genomics) are being replaced with behavioural equivalents — reaction times, accuracy scores, survey/Likert data, experiment logs — per the course's key adaptation rule.
+Original datasets (murders, baseball, elections, genomics) are being replaced with behavioural equivalents — reaction times, accuracy scores, survey/Likert data, experiment logs — per the course's key adaptation rule. See `REFLAVORING_PLAN.md` for the full dataset-by-dataset plan (Tier 1 implemented, Tier 2/3 proposed) and `REFRAMING_PLAN_ARCHIVE.md` for an earlier, superseded approach whose analogy content was mined into the current plan.
 
 ## Structure
 
 Standard R package layout: `R/` (functions), `data/` (datasets), `man/` (docs), `DESCRIPTION`/`NAMESPACE`.
+
+Two separate script conventions coexist deliberately — don't merge them:
+- `inst/script/make-<dataset>.R` — one file per **original** upstream dslabs dataset, documenting how each `.rda` was originally constructed. Not part of the reflavoring effort; leave untouched.
+- `data-raw/reflavor_datasets.R` — a single script covering all **derived/relabeled** Tier-1+ datasets added by this course's reflavoring effort (loads an original dataset, transforms/renames it, writes the new object). One script rather than one-per-dataset because every block is a rename/rescale of something that already exists, not an independent construction.

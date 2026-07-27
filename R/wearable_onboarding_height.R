@@ -31,6 +31,25 @@
 #'   or real, ethically-sourced replacement is planned for a future release
 #'   (see \code{BDS_development_plan.md} Phase 2).
 #'
+#' @details
+#' **Teaching connection:** online onboarding forms routinely contain
+#' free-text entry fields (height, age, device model) that produce mixed
+#' units, typos, and impossible values. Cleaning this raw height field is
+#' the prototypical dirty-data exercise for behavioural technology
+#' research -- the same skill needed before any analysis of self-reported
+#' onboarding data.
+#'
 #' @examples
 #' wearable_onboarding_height |> head()
+#'
+#' # Identify entries that look like centimeters entered where inches were
+#' # expected (implausibly tall in inches => likely cm).
+#' library(dplyr)
+#' wearable_onboarding_height |>
+#'   mutate(height_num = suppressWarnings(as.numeric(reported_height_raw))) |>
+#'   filter(height_num > 84) |>
+#'   select(reported_height_raw)
+#'
+#' # What proportion of entries are non-numeric free text (entry errors)?
+#' mean(is.na(suppressWarnings(as.numeric(wearable_onboarding_height$reported_height_raw))))
 "wearable_onboarding_height"

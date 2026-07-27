@@ -7,7 +7,7 @@ Maintainer: Rafael A. Irizarry <rafael_irizarry@dfci.harvard.edu>
 Depends:
     R (>= 4.1.0)
 Imports: ggplot2
-Suggests: testthat (>= 3.0.0)
+Suggests: testthat (>= 3.0.0), dplyr, tidyr
 Config/testthat/edition: 3
 License: Artistic-2.0
 Encoding: UTF-8

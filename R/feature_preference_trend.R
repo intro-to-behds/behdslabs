@@ -25,6 +25,24 @@
 #'   ethically-sourced replacement is planned for a future release (see
 #'   \code{BDS_development_plan.md} Phase 2).
 #'
+#' @details
+#' **Teaching connection:** daily satisfaction or NPS scores during a
+#' product launch produce noisy time series with the same structure as
+#' opinion-polling margins. A LOESS smooth extracts the underlying
+#' preference trend from day-to-day noise -- the same technique used in
+#' product analytics dashboards to distinguish genuine engagement shifts
+#' from random fluctuation.
+#'
 #' @examples
 #' feature_preference_trend |> head()
+#'
+#' library(ggplot2)
+#' ggplot(feature_preference_trend, aes(x = days_before_launch, y = preference_margin)) +
+#'   geom_point(alpha = 0.4) +
+#'   geom_smooth(method = "loess", span = 0.3) +
+#'   labs(title = "Preference trend over time",
+#'        subtitle = "Same method used to smooth daily satisfaction scores during an app launch")
+#'
+#' # Noise-to-signal ratio: how much does the raw margin vary day to day?
+#' sd(feature_preference_trend$preference_margin)
 "feature_preference_trend"

@@ -28,6 +28,27 @@
 #'   narrative fit. A synthetic or real, ethically-sourced replacement is
 #'   planned for a future release (see \code{BDS_development_plan.md} Phase 2).
 #'
+#' @details
+#' **Teaching connection:** computing population-adjusted rates and
+#' comparing regional patterns is the same operation used to analyse
+#' regional variation in smartphone theft reports, cyberbullying
+#' incidents per user, or privacy-complaint rates across states. The
+#' workflow here (rate per capita, compare by region) is a template for
+#' any geographically stratified behavioural-technology dataset.
+#'
 #' @examples
 #' app_data_breaches
+#'
+#' # Rate per 100,000 population -- the same formula used for incident
+#' # rates per 100,000 installs or cybercrime reports per 100,000 users.
+#' library(dplyr)
+#' app_data_breaches |>
+#'   mutate(rate = incidents / population * 1e5) |>
+#'   group_by(region) |>
+#'   summarise(mean_rate = mean(rate)) |>
+#'   arrange(desc(mean_rate))
+#'
+#' # Does raw count mislead about regional risk, as it can when comparing
+#' # large vs. small user bases in app analytics?
+#' with(app_data_breaches, cor(population, incidents))
 "app_data_breaches"

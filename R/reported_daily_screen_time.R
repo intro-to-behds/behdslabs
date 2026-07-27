@@ -22,6 +22,21 @@
 #'   ethically-sourced replacement is planned for a future release (see
 #'   \code{BDS_development_plan.md} Phase 2).
 #'
+#' @details
+#' **Teaching connection:** in behavioural technology research,
+#' response-time or interaction data logged in milliseconds by some
+#' devices and seconds by others creates unit-entry outliers just like
+#' this one. A single mislogged value inflates the mean dramatically
+#' while leaving the median unaffected -- a key reason to prefer the
+#' median (or a trimmed mean) for latency- and duration-type data.
+#'
 #' @examples
 #' summary(reported_daily_screen_time)
+#'
+#' # How much does the outlier shift the mean vs. the median?
+#' mean(reported_daily_screen_time); median(reported_daily_screen_time)
+#'
+#' # Remove the outlier and compare again.
+#' clean <- reported_daily_screen_time[reported_daily_screen_time < 10]
+#' mean(clean); median(clean)
 "reported_daily_screen_time"

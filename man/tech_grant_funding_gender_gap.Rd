@@ -30,6 +30,14 @@ for teaching gender-gap-in-funding analysis.
   \item awards_total, awards_men, awards_women. Number of awards.
   \item success_rates_total, success_rates_men, success_rates_women. Percent of applications awarded.
 }
+
+
+**Teaching connection:** gender disparities in tech hiring and
+promotion show the same confounding pattern as this funding dataset --
+aggregate differences can shrink or reverse once you condition on
+domain/role. The same statistical approach (compare the aggregate gap
+to the within-domain gaps) is used to audit algorithmic hiring tools
+for disparate impact across demographic groups.
 }
 \note{
 These are not real grant-funding data. They are the original
@@ -39,5 +47,20 @@ These are not real grant-funding data. They are the original
 }
 \examples{
 tech_grant_funding_gender_gap
+
+# Overall success rate by gender -- does a gap appear in aggregate?
+library(dplyr)
+tech_grant_funding_gender_gap |>
+  summarise(rate_men = sum(awards_men) / sum(applications_men),
+            rate_women = sum(awards_women) / sum(applications_women))
+
+# Now break down by tech domain. Does the within-domain pattern match
+# the aggregate pattern? (analogous to auditing a hiring tool by role)
+library(ggplot2)
+tech_grant_funding_gender_gap |>
+  ggplot(aes(x = reorder(tech_domain, success_rates_men - success_rates_women),
+             y = success_rates_men - success_rates_women)) +
+  geom_col() + coord_flip() +
+  labs(title = "Gender gap in success rate by tech domain")
 }
 \keyword{datasets}

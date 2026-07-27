@@ -136,3 +136,43 @@ screen_time_vs_smart_speaker_trend <- data.frame(
   year = divorce_margarine$year
 )
 usethis::use_data(screen_time_vs_smart_speaker_trend, overwrite = TRUE)
+
+# --- 13. us_contagious_diseases -> fitness_app_downloads_by_state -------
+load("data/us_contagious_diseases.rda")
+.app_category_map <- c(
+  "Hepatitis A" = "Macro/Nutrition Logging",
+  "Measles" = "Guided Meditation",
+  "Mumps" = "Sleep Tracking",
+  "Pertussis" = "Yoga & Stretching",
+  "Polio" = "Heart-Rate Monitoring",
+  "Rubella" = "Running Coach",
+  "Smallpox" = "Step Tracking"
+)
+fitness_app_downloads_by_state <- data.frame(
+  app_category = unname(.app_category_map[as.character(us_contagious_diseases$disease)]),
+  state = us_contagious_diseases$state,
+  year = us_contagious_diseases$year,
+  weeks_tracked = us_contagious_diseases$weeks_reporting,
+  downloads = us_contagious_diseases$count,
+  population = us_contagious_diseases$population
+)
+usethis::use_data(fitness_app_downloads_by_state, overwrite = TRUE)
+
+# --- 14. gapminder -> global_tech_adoption -------------------------------
+load("data/gapminder.rda")
+.rescale_screen_time <- function(life_expectancy) {
+  rng <- range(life_expectancy, na.rm = TRUE)
+  1 + (life_expectancy - rng[1]) / (rng[2] - rng[1]) * 9
+}
+global_tech_adoption <- data.frame(
+  country = gapminder$country,
+  year = gapminder$year,
+  continent = gapminder$continent,
+  region = gapminder$region,
+  gdp = gapminder$gdp,
+  active_user_base = gapminder$population,
+  devices_owned_per_capita = gapminder$fertility,
+  app_uninstall_rate_per_1000 = gapminder$infant_mortality,
+  avg_daily_screen_time_hours = .rescale_screen_time(gapminder$life_expectancy)
+)
+usethis::use_data(global_tech_adoption, overwrite = TRUE)

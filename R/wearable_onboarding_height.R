@@ -1,0 +1,55 @@
+#' Self-reported height at fitness-wearable app onboarding
+#'
+#' Self-reported height, as entered by users during onboarding of a
+#' fitness-wearable app (needed for stride-length calibration), along with
+#' the timestamp of entry and sex. Reported values are messy free text --
+#' some in inches, some in feet-and-inches, some in cm, some clearly wrong
+#' or nonsensical -- illustrating why raw user input needs cleaning before
+#' analysis.
+#'
+#' \itemize{
+#'   \item onboarding_timestamp. Date and time the value was entered.
+#'   \item sex. Male or Female.
+#'   \item reported_height_raw. Self-reported height, as free text (uncleaned).
+#' }
+#'
+#' @docType data
+#'
+#' @usage wearable_onboarding_height
+#'
+#' @format An object of class \code{"data.frame"}.
+#'
+#' @keywords datasets
+#'
+#' @source Original \code{dslabs::reported_heights} values (Irizarry & Gill),
+#'   relabeled. The messy string content (unit confusion, jokes, obvious
+#'   errors) is preserved unchanged, since it is specific to self-reported
+#'   height and is the point of the exercise.
+#'
+#' @note These are not real wearable-app onboarding records. They are the
+#'   original \code{dslabs::reported_heights} values, relabeled. A synthetic
+#'   or real, ethically-sourced replacement is planned for a future release
+#'   (see \code{BDS_development_plan.md} Phase 2).
+#'
+#' @details
+#' **Teaching connection:** online onboarding forms routinely contain
+#' free-text entry fields (height, age, device model) that produce mixed
+#' units, typos, and impossible values. Cleaning this raw height field is
+#' the prototypical dirty-data exercise for behavioural technology
+#' research -- the same skill needed before any analysis of self-reported
+#' onboarding data.
+#'
+#' @examples
+#' wearable_onboarding_height |> head()
+#'
+#' # Identify entries that look like centimeters entered where inches were
+#' # expected (implausibly tall in inches => likely cm).
+#' library(dplyr)
+#' wearable_onboarding_height |>
+#'   mutate(height_num = suppressWarnings(as.numeric(reported_height_raw))) |>
+#'   filter(height_num > 84) |>
+#'   select(reported_height_raw)
+#'
+#' # What proportion of entries are non-numeric free text (entry errors)?
+#' mean(is.na(suppressWarnings(as.numeric(wearable_onboarding_height$reported_height_raw))))
+"wearable_onboarding_height"

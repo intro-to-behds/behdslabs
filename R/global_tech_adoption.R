@@ -1,0 +1,71 @@
+#' Global technology adoption by country and year
+#'
+#' Country-level technology-adoption indicators over time -- active user
+#' base, average app price, app uninstall rate, average daily screen
+#' time, and per-capita economic output -- used for longitudinal and
+#' cross-country comparisons.
+#'
+#' \itemize{
+#'   \item country. Country name.
+#'   \item year. Year.
+#'   \item continent. Continent.
+#'   \item region. Geographical region.
+#'   \item gdp. Gross domestic product, current US dollars.
+#'   \item active_user_base. Number of active users (population).
+#'   \item avg_price_per_app_usd. Average price paid per app, in US dollars
+#'     (PPP-adjusted).
+#'   \item app_uninstall_rate_per_1000. App uninstalls per 1,000 installs
+#'     within 30 days.
+#'   \item avg_daily_screen_time_hours. Average daily screen time, in hours.
+#' }
+#'
+#' @docType data
+#'
+#' @usage global_tech_adoption
+#'
+#' @format An object of class \code{"data.frame"}.
+#'
+#' @keywords datasets
+#'
+#' @source Original \code{dslabs::gapminder} values (Irizarry & Gill).
+#'   \code{population} -> \code{active_user_base}; \code{fertility} ->
+#'   \code{avg_price_per_app_usd}; \code{infant_mortality} ->
+#'   \code{app_uninstall_rate_per_1000} (both unchanged numerically);
+#'   \code{life_expectancy} -> \code{avg_daily_screen_time_hours}, linearly
+#'   rescaled from its original ~30-85 year range to a ~1-10 hour range.
+#'   \code{country}, \code{year}, \code{continent}, \code{region}, and
+#'   \code{gdp} are unchanged.
+#'
+#' @note These are not real technology-adoption data. They are the original
+#'   \code{dslabs::gapminder} values, relabeled and in one case linearly
+#'   rescaled. A synthetic or real, ethically-sourced replacement is planned
+#'   for a future release (see \code{BDS_development_plan.md} Phase 2).
+#'
+#' @details
+#' **Teaching connection:** the same longitudinal framework used for
+#' infant mortality/GDP across countries applies to the digital divide --
+#' internet penetration, smartphone adoption, and digital-literacy scores
+#' across countries/income levels. Has the gap converged over decades, the
+#' way life expectancy gaps did? Note the two rescaled/relabeled axes were
+#' deliberately chosen to keep the original trend directions intact:
+#' \code{avg_price_per_app_usd} (from \code{fertility}) declines over
+#' decades just as \code{fertility} did, which reads naturally as app
+#' pricing maturing toward freemium models; \code{avg_daily_screen_time_hours}
+#' (from \code{life_expectancy}) rises over decades just as
+#' \code{life_expectancy} did. \code{gdp/active_user_base/365} is used
+#' downstream as a "revenue per active user per day" metric, replacing the
+#' original dollars-a-day poverty framing with a digital-monetization-divide
+#' story.
+#'
+#' @examples
+#' global_tech_adoption |> head()
+#'
+#' # Revenue per active user per day -- same arithmetic as the original
+#' # "dollars a day" income metric, reframed as monetization intensity.
+#' library(dplyr)
+#' global_tech_adoption |>
+#'   filter(year == max(year, na.rm = TRUE)) |>
+#'   mutate(revenue_per_user_day = gdp / active_user_base / 365) |>
+#'   arrange(desc(revenue_per_user_day)) |>
+#'   head()
+"global_tech_adoption"

@@ -1,4 +1,4 @@
-#' dslabs theme set 
+#' behdslabs theme set
 #'
 #' This function sets a ggplot2 theme used throughout the data science labs. It can be called without arguments.
 #'

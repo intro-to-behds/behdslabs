@@ -29,6 +29,21 @@ This dataset contains all tweets from Donald Trump's Twitter account from 2009 t
 \item is_retweet. A logical telling us if it is a retweet or not.
 }
 }
+\note{
+This dataset is retained unchanged for backward compatibility with
+  the upstream \code{dslabs} package, but it is deliberately \emph{not}
+  used by the Behavioural Data Science course materials
+  (\code{behdsbook-part-1}). It contains real, identifiable messages from
+  a named public figure, which conflicts with the course's own module on
+  data ethics and the GDPR. It has \emph{not} been reflavored or
+  relabeled: depersonalizing it (dropping identity and text) would leave
+  nothing to run a text-mining lesson on. The text-analysis chapter
+  instead uses the externally hosted, permissively licensed HC3 corpus
+  (Human ChatGPT Comparison Corpus, Guo et al. 2023, CC-BY-SA-4.0), which
+  students download themselves -- it is intentionally not bundled into
+  this package. See \code{REFLAVORING_PLAN.md} and the course's
+  \code{PART1_PLAN_DIARY.md} / \code{PACKAGE_PLAN_DIARY.md}.
+}
 \examples{
 head(trump_tweets)
 

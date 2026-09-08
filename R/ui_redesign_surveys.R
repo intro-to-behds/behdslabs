@@ -1,0 +1,65 @@
+#' UI-redesign preference surveys, by panel and method
+#'
+#' 127 surveys run by 16 research panels in the months before an app's UI
+#' redesign shipped, asking users whether they prefer the redesigned
+#' (\code{prefer_new}) or the current (\code{prefer_current}) interface.
+#' Each survey used one of two methods: unmoderated \code{remote} surveys
+#' or moderated \code{lab} sessions. The dataset is built to expose the
+#' \emph{mode effect} -- the two methods give systematically different
+#' preference estimates.
+#'
+#' \itemize{
+#'   \item startdate. Survey start date.
+#'   \item enddate. Survey end date.
+#'   \item panel. Anonymized research-panel identifier (\code{"Panel 01"}
+#'     ..\code{"Panel 16"}); the same panel keeps the same id.
+#'   \item method. \code{"remote"} (unmoderated remote survey) or
+#'     \code{"lab"} (moderated in-lab session).
+#'   \item n_participants. Number of participants.
+#'   \item prefer_new. Proportion preferring the redesigned UI.
+#'   \item prefer_current. Proportion preferring the current UI.
+#'   \item undecided. Proportion undecided.
+#'   \item margin. \code{prefer_new - prefer_current}.
+#' }
+#'
+#' @docType data
+#'
+#' @usage ui_redesign_surveys
+#'
+#' @format An object of class \code{"data.frame"} (127 x 9).
+#'
+#' @keywords datasets
+#'
+#' @source Original \code{dslabs::brexit_polls} values (Irizarry & Gill;
+#'   2016 UK EU-referendum polling, via Wikipedia). All dates and numeric
+#'   values are unchanged. \code{pollster} -> anonymized \code{panel};
+#'   \code{poll_type} Online/Telephone -> \code{method} remote/lab;
+#'   \code{remain}/\code{leave} -> \code{prefer_new}/\code{prefer_current};
+#'   \code{spread} -> \code{margin}.
+#'
+#' @note These are not real UX-survey data. They are the original
+#'   \code{dslabs::brexit_polls} values, relabeled for narrative fit. A
+#'   synthetic or real, ethically-sourced replacement is planned for a
+#'   future release (see \code{BDS_development_plan.md} Phase 2).
+#'
+#' @details
+#' **Teaching connection:** the online-vs-telephone gap in referendum
+#' polling is a direct analogue of the mode effect in usability research
+#' -- unmoderated remote testing gives systematically different ratings
+#' from moderated in-lab testing. This dataset lets students quantify a
+#' real mode effect and build a confidence interval that accounts for it,
+#' rather than pooling both methods naively.
+#'
+#' @examples
+#' library(dplyr)
+#'
+#' # Mode effect: mean margin by method
+#' ui_redesign_surveys |>
+#'   group_by(method) |>
+#'   summarise(mean_margin = mean(margin), n = n())
+#'
+#' # Only the late surveys
+#' ui_redesign_surveys |>
+#'   filter(enddate >= as.Date("2016-06-01")) |>
+#'   summarise(mean_prefer_new = mean(prefer_new))
+"ui_redesign_surveys"

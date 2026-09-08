@@ -370,3 +370,25 @@ wearable_stress_signals <- list(
              levels = c("low", "high"))
 )
 usethis::use_data(wearable_stress_signals, overwrite = TRUE)
+
+
+# --- 23. brexit_polls -> ui_redesign_surveys -------------------------
+# 127 preference surveys for an app UI redesign. All numeric values and
+# dates unchanged. pollster -> anonymized panel; poll_type Online/
+# Telephone -> method remote/lab (the "mode effect" analogue: unmoderated
+# remote surveys vs moderated in-lab sessions); remain/leave -> prefer
+# new/current UI.
+load("data/brexit_polls.rda")
+ui_redesign_surveys <- data.frame(
+  startdate      = brexit_polls$startdate,
+  enddate        = brexit_polls$enddate,
+  panel          = sprintf("Panel %02d", as.integer(factor(brexit_polls$pollster))),
+  method         = factor(ifelse(brexit_polls$poll_type == "Online", "remote", "lab"),
+                          levels = c("remote", "lab")),
+  n_participants = brexit_polls$samplesize,
+  prefer_new     = brexit_polls$remain,
+  prefer_current = brexit_polls$leave,
+  undecided      = brexit_polls$undecided,
+  margin         = brexit_polls$spread
+)
+usethis::use_data(ui_redesign_surveys, overwrite = TRUE)

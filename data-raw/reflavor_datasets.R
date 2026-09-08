@@ -392,3 +392,54 @@ ui_redesign_surveys <- data.frame(
   margin         = brexit_polls$spread
 )
 usethis::use_data(ui_redesign_surveys, overwrite = TRUE)
+
+
+# --- 24. olive -> wearable_signal_profiles_by_cohort -----------------
+# 572 wearable recordings; the 8 compositional fatty-acid percentages
+# (they sum to ~100) are relabeled 1:1 to 8 signal-quality proportions,
+# values unchanged. Nested geography region(3)/area(9) -> device_type(3)/
+# device_model(9).
+load("data/olive.rda")
+.device_type_map <- c(
+  "Northern Italy" = "smartwatch",
+  "Sardinia"       = "chest_strap",
+  "Southern Italy" = "smart_ring"
+)
+.device_model_map <- c(
+  "East-Liguria"    = "Watch S",  "Umbria"       = "Watch X",  "West-Liguria" = "Watch SE",
+  "Coast-Sardinia"  = "Strap Lite","Inland-Sardinia" = "Strap Pro",
+  "Calabria"        = "Ring v1",  "North-Apulia" = "Ring v2",  "Sicily"       = "Ring v3",
+  "South-Apulia"    = "Ring SE"
+)
+wearable_signal_profiles_by_cohort <- data.frame(
+  device_type         = factor(unname(.device_type_map[as.character(olive$region)]),
+                               levels = unname(.device_type_map)),
+  device_model        = unname(.device_model_map[as.character(olive$area)]),
+  pct_motion_artifact = olive$palmitic,
+  pct_saturation      = olive$palmitoleic,
+  pct_baseline_drift  = olive$stearic,
+  pct_clean           = olive$oleic,
+  pct_poor_contact    = olive$linoleic,
+  pct_dropout         = olive$linolenic,
+  pct_powerline_noise = olive$arachidic,
+  pct_other           = olive$eicosenoic
+)
+usethis::use_data(wearable_signal_profiles_by_cohort, overwrite = TRUE)
+
+# --- 25. stars -> cognitive_task_metrics ----------------------------
+# The Hertzsprung-Russell teaching set: plot two continuous metrics,
+# discover latent task-type clusters. magnitude/temp values unchanged;
+# star names anonymized; the 10 spectral classes -> 10 task labels.
+load("data/stars.rda")
+.task_type_map <- c(
+  "O" = "stroop", "B" = "visual_search", "A" = "mental_arithmetic",
+  "F" = "sorting", "G" = "planning", "K" = "reading", "M" = "free_recall",
+  "DA" = "n_back_1", "DB" = "n_back_2", "DF" = "n_back_3"
+)
+cognitive_task_metrics <- data.frame(
+  session        = sprintf("S%02d", seq_len(nrow(stars))),
+  cognitive_load = stars$magnitude,
+  arousal_index  = stars$temp,
+  task_type      = unname(.task_type_map[as.character(stars$type)])
+)
+usethis::use_data(cognitive_task_metrics, overwrite = TRUE)

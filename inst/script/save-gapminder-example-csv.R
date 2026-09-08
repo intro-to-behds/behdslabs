@@ -1,20 +1,42 @@
-library(tidyverse)
+# Regenerate the two "two countries example" wide-format teaching CSVs in
+# inst/extdata/ from the reflavored global_tech_adoption dataset.
+#
+# These files are used by behdsbook-part-1's reshaping-data.qmd (and the
+# tidy-data example in tidyverse.qmd) to teach pivot_longer / pivot_wider /
+# separate_wider_delim. They were originally built from dslabs::gapminder's
+# `fertility` and `life_expectancy` columns pulled from now-dead Google
+# Spreadsheet URLs; they are now derived from global_tech_adoption instead:
+#   fertility            -> avg_price_per_app_usd   (unchanged values)  -> `price`
+#   life_expectancy      -> avg_daily_screen_time_hours (rescaled)      -> `screen_time`
+#
+# `price` is deliberately a single token and `screen_time` two tokens so the
+# separate_wider_delim(too_many = "merge") lesson still has a "2 pieces vs
+# 3 pieces" case to handle.
 
-tab <- read_csv("https://docs.google.com/spreadsheet/pub?key=phAwcNAVuyj0TAlJeCEzcGQ&output=csv",  na = c("", "NA", "-", "."))
-countries <- c("South Korea","Germany")
-names(tab)[1] <- "country"
-tab <- tab %>% filter(country %in% countries) %>% select(country,`1960`:`2015`)
-write.csv(tab, "inst/extdata/fertility-two-countries-example.csv", row.names = FALSE)
+library(behdslabs)
+library(dplyr)
+library(tidyr)
 
-tab1 <- tab
-tab2 <- read_csv("http://docs.google.com/spreadsheet/pub?key=phAwcNAVuyj2tPLxKvvnNPA&output=csv")
-countries <- c("South Korea","Germany")
-names(tab2)[1] <- "country"
-tab2 <- tab2 %>% filter(country %in% countries) %>% select(country,`1960`:`2015`)
+countries <- c("Germany", "South Korea")
 
-colnames(tab1)[-1] <- paste(colnames(tab1)[-1], "fertility", sep="_")
-colnames(tab2)[-1] <- paste(colnames(tab2)[-1], "life_expectancy", sep="_")
+d <- global_tech_adoption |>
+  filter(country %in% countries & year >= 1960 & year <= 2015) |>
+  transmute(country, year,
+            price = round(avg_price_per_app_usd, 2),
+            screen_time = round(avg_daily_screen_time_hours, 2))
 
-tab3 <- full_join(tab1, tab2, by="country")
-tab3 <- select(tab3, c("country", sort(names(tab3)[-1])))
-write.csv(tab3, "inst/extdata/life-expectancy-and-fertility-two-countries-example.csv", row.names = FALSE)
+# 1. app price only, plain year column names
+d |>
+  select(country, year, price) |>
+  pivot_wider(names_from = year, values_from = price) |>
+  as.data.frame() |>
+  write.csv("inst/extdata/app-price-two-countries-example.csv", row.names = FALSE)
+
+# 2. app price AND screen time, "<year>_<variable>" column names
+wide2 <- d |>
+  pivot_wider(names_from = year, values_from = c(price, screen_time),
+              names_glue = "{year}_{.value}") |>
+  as.data.frame()
+wide2 <- wide2[, c("country", sort(setdiff(names(wide2), "country")))]
+write.csv(wide2, "inst/extdata/screentime-and-app-price-two-countries-example.csv",
+          row.names = FALSE)

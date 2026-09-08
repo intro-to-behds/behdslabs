@@ -337,3 +337,36 @@ prior_launch_results <- data.frame(
   adopt_alt2    = results_us_election_2012$stein
 )
 usethis::use_data(prior_launch_results, overwrite = TRUE)
+
+
+# --- 22. brca -> wearable_stress_signals ------------------------------
+# ML classification benchmark. 569 x 30 feature matrix kept value-for-
+# value; the 10 base nuclear measures are relabeled to 10 wearable
+# physiological signals, the mean/se/worst summary suffixes become
+# mean/se/peak, and the benign/malignant label becomes low/high arousal.
+load("data/brca.rda")
+.signal_map <- c(
+  radius       = "heart_rate",
+  texture      = "hrv_rmssd",
+  perimeter    = "breathing_rate",
+  area         = "motion_intensity",
+  smoothness   = "eda_tonic",
+  compactness  = "eda_phasic",
+  concavity    = "skin_temp",
+  concave_pts  = "pulse_amplitude",
+  symmetry     = "beat_regularity",
+  fractal_dim  = "signal_complexity"
+)
+.suffix_map <- c(mean = "mean", se = "se", worst = "peak")
+.old_cols <- colnames(brca$x)
+.base <- sub("_(mean|se|worst)$", "", .old_cols)
+.suf  <- sub("^.*_(mean|se|worst)$", "\\1", .old_cols)
+.wss_x <- brca$x
+colnames(.wss_x) <- paste0(unname(.signal_map[.base]), "_",
+                           unname(.suffix_map[.suf]))
+wearable_stress_signals <- list(
+  x = .wss_x,
+  y = factor(ifelse(as.character(brca$y) == "M", "high", "low"),
+             levels = c("low", "high"))
+)
+usethis::use_data(wearable_stress_signals, overwrite = TRUE)

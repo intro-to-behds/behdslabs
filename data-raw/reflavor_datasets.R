@@ -278,3 +278,62 @@ app_ratings <- data.frame(
   timestamp = movielens$timestamp
 )
 usethis::use_data(app_ratings, overwrite = TRUE)
+
+
+# ======================================================================
+# Tier-3 reflavoring: US election polling/results -> product-launch
+# preference forecasting. Structures preserved exactly; numeric values
+# unchanged. "Panels" (survey vendors) replace pollsters, "markets"
+# replace states, and the three preference options map from the three
+# main 2016 candidates: new version (Clinton), current version (Trump),
+# switch to a competitor (Johnson). Same disclaimer -- see the @note in R/.
+# ======================================================================
+
+# --- 20. polls_us_election_2016 -> product_launch_forecast -------------
+#         results_us_election_2016 -> product_launch_results
+load("data/polls_us_election_2016.rda")   # loads both objects
+
+.panel_id <- sprintf("Panel %03d", as.integer(factor(polls_us_election_2016$pollster)))
+
+product_launch_forecast <- data.frame(
+  market           = polls_us_election_2016$state,
+  startdate        = polls_us_election_2016$startdate,
+  enddate          = polls_us_election_2016$enddate,
+  panel            = .panel_id,
+  panel_grade      = polls_us_election_2016$grade,
+  samplesize       = polls_us_election_2016$samplesize,
+  respondents      = polls_us_election_2016$population,
+  raw_pref_new     = polls_us_election_2016$rawpoll_clinton,
+  raw_pref_current = polls_us_election_2016$rawpoll_trump,
+  raw_pref_switch  = polls_us_election_2016$rawpoll_johnson,
+  raw_pref_other   = polls_us_election_2016$rawpoll_mcmullin,
+  adj_pref_new     = polls_us_election_2016$adjpoll_clinton,
+  adj_pref_current = polls_us_election_2016$adjpoll_trump,
+  adj_pref_switch  = polls_us_election_2016$adjpoll_johnson,
+  adj_pref_other   = polls_us_election_2016$adjpoll_mcmullin
+)
+
+product_launch_results <- data.frame(
+  market        = results_us_election_2016$state,
+  market_weight = results_us_election_2016$electoral_votes,
+  adopt_new     = results_us_election_2016$clinton,
+  adopt_current = results_us_election_2016$trump,
+  adopt_alt1    = results_us_election_2016$johnson,
+  adopt_alt2    = results_us_election_2016$stein,
+  adopt_alt3    = results_us_election_2016$mcmullin,
+  adopt_other   = results_us_election_2016$others
+)
+
+usethis::use_data(product_launch_forecast, product_launch_results, overwrite = TRUE)
+
+# --- 21. results_us_election_2012 -> prior_launch_results -------------
+load("data/results_us_election_2012.rda")
+prior_launch_results <- data.frame(
+  market        = results_us_election_2012$state,
+  market_weight = results_us_election_2012$electoral_votes,
+  adopt_new     = results_us_election_2012$obama,
+  adopt_current = results_us_election_2012$romney,
+  adopt_alt1    = results_us_election_2012$johnson,
+  adopt_alt2    = results_us_election_2012$stein
+)
+usethis::use_data(prior_launch_results, overwrite = TRUE)

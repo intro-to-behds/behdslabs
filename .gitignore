@@ -4,3 +4,6 @@
 .RData
 .Ruserdata
 behdslabs.Rproj
+.Renviron
+*.Renviron
+.env

@@ -176,3 +176,105 @@ global_tech_adoption <- data.frame(
   avg_daily_screen_time_hours = .rescale_screen_time(gapminder$life_expectancy)
 )
 usethis::use_data(global_tech_adoption, overwrite = TRUE)
+
+
+# ======================================================================
+# Tier-2 reflavoring (label / name relabels only; numeric values and
+# array contents preserved exactly). Same disclaimer applies -- see each
+# dataset's @note in R/.
+# ======================================================================
+
+# --- 15. mnist_27 -> gesture_swipe_data --------------------------------
+# Label-only: the two digit classes (2, 7) become two swipe directions.
+# Pixel-quadrant predictors x_1, x_2, the index vectors and the true_p
+# probability surface are untouched (true_p$p, originally P(y = 7), now
+# reads as P(y = "swipe_right") -- numerically identical).
+load("data/mnist_27.rda")
+.swipe_label <- function(y) {
+  factor(ifelse(as.character(y) == "2", "swipe_left", "swipe_right"),
+         levels = c("swipe_left", "swipe_right"))
+}
+gesture_swipe_data <- mnist_27
+gesture_swipe_data$train$y <- .swipe_label(mnist_27$train$y)
+gesture_swipe_data$test$y  <- .swipe_label(mnist_27$test$y)
+usethis::use_data(gesture_swipe_data, overwrite = TRUE)
+
+# --- 16. mnist_127 -> gesture_swipe_data_3class -----------------------
+# Label-only: the three digit classes (1, 2, 7) become three gesture
+# types. Predictors x_1, x_2 untouched.
+load("data/mnist_127.rda")
+.gesture3_label <- function(y) {
+  m <- c("1" = "tap", "2" = "swipe", "7" = "pinch")
+  factor(unname(m[as.character(y)]), levels = c("tap", "swipe", "pinch"))
+}
+gesture_swipe_data_3class <- mnist_127
+gesture_swipe_data_3class$train$y <- .gesture3_label(mnist_127$train$y)
+gesture_swipe_data_3class$test$y  <- .gesture3_label(mnist_127$test$y)
+usethis::use_data(gesture_swipe_data_3class, overwrite = TRUE)
+
+# --- 17. tissue_gene_expression -> sensor_activity_features -----------
+# The 189 x 500 feature matrix is kept value-for-value; only its column
+# names change from gene symbols to opaque feature_001..feature_500
+# (they were never interpreted individually). The 7 tissue types are
+# relabeled 1:1 to 7 activity contexts.
+load("data/tissue_gene_expression.rda")
+.activity_map <- c(
+  "cerebellum"  = "walking",
+  "colon"       = "typing",
+  "endometrium" = "reading",
+  "hippocampus" = "meditating",
+  "kidney"      = "gaming",
+  "liver"       = "driving",
+  "placenta"    = "resting"
+)
+.saf_x <- tissue_gene_expression$x
+colnames(.saf_x) <- sprintf("feature_%03d", seq_len(ncol(.saf_x)))
+sensor_activity_features <- list(
+  x = .saf_x,
+  y = factor(unname(.activity_map[as.character(tissue_gene_expression$y)]),
+             levels = unname(.activity_map))
+)
+usethis::use_data(sensor_activity_features, overwrite = TRUE)
+
+# --- 18. pr_death_counts -> app_outage_engagement_impact -------------
+# Interrupted-time-series counts kept exactly; deaths -> daily active
+# users. The event date (a real hurricane landfall in the original) is
+# reframed in the docs as a major app outage / forced update.
+load("data/pr-death-counts.rda")
+app_outage_engagement_impact <- data.frame(
+  date = pr_death_counts$date,
+  daily_active_users = pr_death_counts$deaths
+)
+usethis::use_data(app_outage_engagement_impact, overwrite = TRUE)
+
+# --- 19. movielens -> app_ratings ------------------------------------
+# userId/rating/timestamp/year preserved exactly. movieId -> app_id
+# (unchanged), title -> a deterministic anonymized app_name, and the
+# multi-genre string is collapsed to a single primary `category` via a
+# fixed genre->category map (apps carry one store category, unlike a
+# film's several genres). fit_recommender_model()'s @examples are a
+# self-contained simulation -- they never referenced movielens -- so no
+# change is needed there.
+load("data/movielens.rda")
+.genre_to_category <- c(
+  "Action" = "Games", "Adventure" = "Games", "Animation" = "Entertainment",
+  "Children" = "Kids", "Comedy" = "Entertainment", "Crime" = "News",
+  "Documentary" = "Education", "Drama" = "Entertainment", "Fantasy" = "Games",
+  "Film-Noir" = "Entertainment", "Horror" = "Entertainment", "IMAX" = "Entertainment",
+  "Musical" = "Music", "Mystery" = "Entertainment", "Romance" = "Lifestyle",
+  "Sci-Fi" = "Games", "Thriller" = "Entertainment", "War" = "News",
+  "Western" = "Entertainment", "(no genres listed)" = "Uncategorized"
+)
+.first_genre <- sub("\\|.*$", "", as.character(movielens$genres))
+.ar_category <- unname(.genre_to_category[.first_genre])
+.ar_category[is.na(.ar_category)] <- "Uncategorized"
+app_ratings <- data.frame(
+  app_id = movielens$movieId,
+  app_name = paste0("app_", movielens$movieId),
+  year = movielens$year,
+  category = .ar_category,
+  user_id = movielens$userId,
+  rating = movielens$rating,
+  timestamp = movielens$timestamp
+)
+usethis::use_data(app_ratings, overwrite = TRUE)

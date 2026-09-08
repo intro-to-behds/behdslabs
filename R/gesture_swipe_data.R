@@ -1,0 +1,58 @@
+#' Touchscreen swipe-gesture classification example (binary)
+#'
+#' A binary classification benchmark: two touchscreen swipe directions,
+#' each described by two predictors derived from where on the screen the
+#' contact was concentrated. Split into training and test sets. Useful for
+#' comparing a linear classifier (e.g. logistic regression) to a flexible
+#' one (e.g. k-nearest neighbours) on a low-dimensional, non-linearly
+#' separable problem.
+#'
+#' \itemize{
+#'   \item train. A data frame with the training data: label \code{y}
+#'     (\code{swipe_left}/\code{swipe_right}) and predictors \code{x_1},
+#'     \code{x_2}.
+#'   \item test. A data frame with the test data, same columns.
+#'   \item index_train. Row indices of the original source data used for
+#'     the training set.
+#'   \item index_test. Row indices of the original source data used for
+#'     the test set.
+#'   \item true_p. A data frame with the two predictors \code{x_1},
+#'     \code{x_2} and the true conditional probability \code{p} of the
+#'     gesture being \code{swipe_right} at that point.
+#' }
+#'
+#' @seealso [read_mnist()]
+#'
+#' @docType data
+#'
+#' @usage gesture_swipe_data
+#'
+#' @format An object of class \code{list}.
+#'
+#' @keywords datasets
+#'
+#' @source Original \code{dslabs::mnist_27} values (a 2-vs-7 handwritten
+#'   digit subset with two dark-pixel-quadrant predictors). The two digit
+#'   classes are relabeled 1:1 to two swipe directions
+#'   (\code{2} -> \code{swipe_left}, \code{7} -> \code{swipe_right}); the
+#'   predictors, index vectors and probability surface are unchanged.
+#'
+#' @note These are not real touchscreen-gesture data. They are the
+#'   original \code{dslabs::mnist_27} values (Irizarry & Gill) with the
+#'   class labels relabeled. A synthetic or real, ethically-sourced
+#'   replacement is planned for a future release (see
+#'   \code{BDS_development_plan.md} Phase 2).
+#'
+#' @details
+#' **Teaching connection:** handwritten-digit recognition is the prototype
+#' task for classifying visual or gestural interface events -- icon
+#' similarity, CAPTCHA solving, or recognising a swipe/tap/pinch from
+#' interaction traces. The two predictors here play the role of two
+#' engineered features of a gesture (e.g. where on the screen the contact
+#' energy was concentrated). Comparing a linear decision boundary to a
+#' flexible one on this dataset teaches the model-selection reasoning used
+#' for real interaction-signal classifiers.
+#'
+#' @examples
+#' with(gesture_swipe_data$train, plot(x_1, x_2, col = as.numeric(y)))
+"gesture_swipe_data"

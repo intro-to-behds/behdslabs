@@ -1,6 +1,7 @@
-test_that("cognitive_task_metrics preserves stars magnitude/temp values exactly", {
-  expect_equal(cognitive_task_metrics$cognitive_load, stars$magnitude)
-  expect_equal(cognitive_task_metrics$arousal_index, stars$temp)
+test_that("cognitive_task_metrics is stars magnitude/temp scaled", {
+  k <- K$cognitive_task_metrics
+  expect_equal(cognitive_task_metrics$cognitive_load, k[["cognitive_load"]] * stars$magnitude)
+  expect_equal(cognitive_task_metrics$arousal_index, k[["arousal_index"]] * stars$temp)
   expect_equal(nrow(cognitive_task_metrics), nrow(stars))
 })
 

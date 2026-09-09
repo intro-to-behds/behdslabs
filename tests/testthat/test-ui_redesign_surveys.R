@@ -1,8 +1,9 @@
-test_that("ui_redesign_surveys preserves brexit_polls values exactly", {
+test_that("ui_redesign_surveys: n_participants scaled, poll columns kept", {
   b <- brexit_polls
   expect_equal(ui_redesign_surveys$startdate, b$startdate)
   expect_equal(ui_redesign_surveys$enddate, b$enddate)
-  expect_equal(ui_redesign_surveys$n_participants, b$samplesize)
+  expect_equal(ui_redesign_surveys$n_participants,
+               round(K$ui_redesign_surveys[["n_participants"]] * b$samplesize))
   expect_equal(ui_redesign_surveys$prefer_new, b$remain)
   expect_equal(ui_redesign_surveys$prefer_current, b$leave)
   expect_equal(ui_redesign_surveys$undecided, b$undecided)

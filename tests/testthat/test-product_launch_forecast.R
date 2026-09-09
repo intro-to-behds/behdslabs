@@ -1,11 +1,12 @@
-test_that("product_launch_forecast preserves polls_us_election_2016 values exactly", {
+test_that("product_launch_forecast: samplesize scaled, other columns kept", {
   p <- polls_us_election_2016
   expect_equal(product_launch_forecast$market, p$state)
-  expect_equal(product_launch_forecast$startdate, p$startdate)
-  expect_equal(product_launch_forecast$enddate, p$enddate)
+  expect_equal(product_launch_forecast$startdate, p$startdate)   # EXC
+  expect_equal(product_launch_forecast$enddate, p$enddate)   # EXC
   expect_equal(product_launch_forecast$panel_grade, p$grade)
-  expect_equal(product_launch_forecast$samplesize, p$samplesize)
-  expect_equal(product_launch_forecast$respondents, p$population)
+  expect_equal(product_launch_forecast$samplesize,
+               round(K$product_launch_forecast[["samplesize"]] * p$samplesize))
+  expect_equal(product_launch_forecast$respondents, p$population)   # EXC (factor)
   expect_equal(product_launch_forecast$raw_pref_new, p$rawpoll_clinton)
   expect_equal(product_launch_forecast$raw_pref_current, p$rawpoll_trump)
   expect_equal(product_launch_forecast$raw_pref_switch, p$rawpoll_johnson)

@@ -443,3 +443,39 @@ cognitive_task_metrics <- data.frame(
   task_type      = unname(.task_type_map[as.character(stars$type)])
 )
 usethis::use_data(cognitive_task_metrics, overwrite = TRUE)
+
+
+# ======================================================================
+# Tier-3 reflavoring: long-run climate time series -> technology-adoption
+# trend series. Three separate objects (different schemas), thematically
+# grouped. All numeric values and years unchanged.
+# ======================================================================
+
+# --- 26. greenhouse_gases -> tech_adoption_trends -------------------
+load("data/greenhouse_gases.rda")
+.tech_map <- c("CO2" = "smartphones", "CH4" = "social_media", "N2O" = "streaming")
+tech_adoption_trends <- data.frame(
+  year           = greenhouse_gases$year,
+  technology     = unname(.tech_map[greenhouse_gases$gas]),
+  adoption_index = greenhouse_gases$concentration
+)
+usethis::use_data(tech_adoption_trends, overwrite = TRUE)
+
+# --- 27. historic_co2 -> connectivity_deep_history -----------------
+load("data/historic_co2.rda")
+.co2_source_map <- c("Ice Cores" = "reconstructed", "Mauna Loa" = "direct")
+connectivity_deep_history <- historic_co2
+names(connectivity_deep_history)[names(connectivity_deep_history) == "co2"] <- "connectivity_index"
+connectivity_deep_history$source <- unname(.co2_source_map[historic_co2$source])
+usethis::use_data(connectivity_deep_history, overwrite = TRUE)
+
+# --- 28. temp_carbon -> screentime_wellbeing_series ----------------
+load("data/temp_carbon.rda")
+screentime_wellbeing_series <- data.frame(
+  year              = temp_carbon$year,
+  wellbeing_anomaly = temp_carbon$temp_anomaly,
+  mood_anomaly      = temp_carbon$land_anomaly,
+  sleep_anomaly     = temp_carbon$ocean_anomaly,
+  screen_time_index = temp_carbon$carbon_emissions
+)
+usethis::use_data(screentime_wellbeing_series, overwrite = TRUE)

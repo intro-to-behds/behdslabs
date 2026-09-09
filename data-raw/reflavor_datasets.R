@@ -1,16 +1,22 @@
-# Tier-1 reflavoring: rename/rescale existing dslabs datasets into
+# Tier-1/2/3 reflavoring: rename + transform existing dslabs datasets into
 # Behavioural Data Science / digital-technology / wearable / neurophysiological
-# themed examples for teaching. NUMERIC VALUES are preserved exactly, or
-# linearly rescaled where noted -- these are NOT real behavioural, usage, or
-# physiological data. See each dataset's @note in R/ for the full disclaimer,
-# and BDS_development_plan.md (Phase 2) for the planned synthetic-data
-# replacement.
+# themed examples for teaching. These are NOT real behavioural, usage, or
+# physiological data -- see each dataset's @note in R/ for the full disclaimer.
+#
+# NUMERIC VALUES: no reflavoured numeric column is byte-identical to its dslabs
+# original (REFLAVORING_PLAN.md ground rule 3). Most scaled columns are the
+# original values times a fixed factor from R/reflavor_constants.R
+# (.reflavor_k), round()ed for counts; two columns use a linear range rescale
+# (.rt_from_height, .rescale_screen_time). Columns kept identical on purpose
+# (dates/year, IDs/weights, bounded proportions, compositional %, opaque
+# feature matrices, free text) are marked "# EXC" below.
 #
 # This script is the single source of truth for the transforms. The
-# correspondence tests in tests/testthat/ re-derive the same values from the
-# constants below to guard against drift.
+# correspondence tests in tests/testthat/ re-derive the same values from
+# .reflavor_k to guard against drift.
 
 library(usethis)
+source("R/reflavor_constants.R")  # .reflavor_k
 
 # --- 1. murders -> app_data_breaches -----------------------------------
 load("data/murders.rda")
@@ -18,8 +24,8 @@ app_data_breaches <- data.frame(
   state = murders$state,
   abb = murders$abb,
   region = murders$region,
-  population = murders$population,
-  incidents = murders$total
+  population = murders$population,                          # EXC: real state populations
+  incidents = round(.reflavor_k$app_data_breaches[["incidents"]] * murders$total)
 )
 usethis::use_data(app_data_breaches, overwrite = TRUE)
 
@@ -53,17 +59,18 @@ load("data/admissions.rda")
 app_task_completion <- data.frame(
   task = admissions$major,
   device = ifelse(admissions$gender == "men", "mobile", "desktop"),
-  completion_rate = admissions$admitted,
-  n_attempts = admissions$applicants
+  completion_rate = admissions$admitted,                    # EXC: bounded [0,100]
+  n_attempts = round(.reflavor_k$app_task_completion[["n_attempts"]] * admissions$applicants)
 )
 usethis::use_data(app_task_completion, overwrite = TRUE)
 
 # --- 5. mice_weights -> app_engagement_experiment ------------------------
 load("data/mice_weigths.rda")
+.k_aee <- .reflavor_k$app_engagement_experiment
 app_engagement_experiment <- data.frame(
-  engagement_score = mice_weights$body_weight,
-  consistency_index = mice_weights$bone_density,
-  error_rate_pct = mice_weights$percent_fat,
+  engagement_score = .k_aee[["engagement_score"]] * mice_weights$body_weight,
+  consistency_index = .k_aee[["consistency_index"]] * mice_weights$bone_density,
+  error_rate_pct = .k_aee[["error_rate_pct"]] * mice_weights$percent_fat,
   sex = mice_weights$sex,
   ui_version = factor(ifelse(mice_weights$diet == "chow", "standard", "redesigned")),
   cohort = mice_weights$gen,
@@ -73,40 +80,41 @@ usethis::use_data(app_engagement_experiment, overwrite = TRUE)
 
 # --- 6. nyc_regents_scores -> cognitive_battery_scores -------------------
 load("data/nyc_regents_scores.rda")
+.k_cbs <- .reflavor_k$cognitive_battery_scores   # one shared factor (0.8) for all 6 columns
 cognitive_battery_scores <- data.frame(
-  score = nyc_regents_scores$score,
-  attention_task = nyc_regents_scores$integrated_algebra,
-  memory_task = nyc_regents_scores$global_history,
-  usability_task = nyc_regents_scores$living_environment,
-  reading_task = nyc_regents_scores$english,
-  reasoning_task = nyc_regents_scores$us_history
+  score = round(.k_cbs[["score"]] * nyc_regents_scores$score),
+  attention_task = round(.k_cbs[["attention_task"]] * nyc_regents_scores$integrated_algebra),
+  memory_task = round(.k_cbs[["memory_task"]] * nyc_regents_scores$global_history),
+  usability_task = round(.k_cbs[["usability_task"]] * nyc_regents_scores$living_environment),
+  reading_task = round(.k_cbs[["reading_task"]] * nyc_regents_scores$english),
+  reasoning_task = round(.k_cbs[["reasoning_task"]] * nyc_regents_scores$us_history)
 )
 usethis::use_data(cognitive_battery_scores, overwrite = TRUE)
 
 # --- 7. outlier_example -> reported_daily_screen_time --------------------
 load("data/outlier_example.rda")
-reported_daily_screen_time <- outlier_example
+reported_daily_screen_time <- .reflavor_k$reported_daily_screen_time[["value"]] * outlier_example
 usethis::use_data(reported_daily_screen_time, overwrite = TRUE)
 
 # --- 8. na_example -> daily_mood_ratings ---------------------------------
 load("data/na_example.rda")
-daily_mood_ratings <- na_example
+daily_mood_ratings <- na_example                            # EXC: 1-7 Likert + NA
 usethis::use_data(daily_mood_ratings, overwrite = TRUE)
 
 # --- 9. death_prob -> app_churn_prob --------------------------------------
 load("data/death_prob.rda")
 app_churn_prob <- data.frame(
-  age = death_prob$age,
+  age = death_prob$age,                                     # EXC: demographic reference
   sex = death_prob$sex,
-  churn_prob = death_prob$prob
+  churn_prob = death_prob$prob                              # EXC: probability [0,1]
 )
 usethis::use_data(app_churn_prob, overwrite = TRUE)
 
 # --- 10. polls_2008 -> feature_preference_trend --------------------------
 load("data/polls_2008.rda")
 feature_preference_trend <- data.frame(
-  days_before_launch = polls_2008$day,
-  preference_margin = polls_2008$margin
+  days_before_launch = polls_2008$day,                      # EXC: time index
+  preference_margin = polls_2008$margin                     # EXC: bounded margin (-1,1)
 )
 usethis::use_data(feature_preference_trend, overwrite = TRUE)
 
@@ -126,14 +134,22 @@ load("data/research_funding_rates.rda")
 tech_grant_funding_gender_gap <- research_funding_rates
 tech_grant_funding_gender_gap$discipline <- unname(.domain_map[research_funding_rates$discipline])
 names(tech_grant_funding_gender_gap)[names(tech_grant_funding_gender_gap) == "discipline"] <- "tech_domain"
+# one shared factor across all 6 count columns: keeps total = men + women and
+# the success_rates ratio (awards/applications) invariant. success_rates_* stay EXC.
+.k_grants <- .reflavor_k$tech_grant_funding_gender_gap[["counts"]]
+.grant_count_cols <- c("applications_total", "applications_men", "applications_women",
+                       "awards_total", "awards_men", "awards_women")
+for (.cc in .grant_count_cols)
+  tech_grant_funding_gender_gap[[.cc]] <- round(.k_grants * research_funding_rates[[.cc]])
 usethis::use_data(tech_grant_funding_gender_gap, overwrite = TRUE)
 
 # --- 12. divorce_margarine -> screen_time_vs_smart_speaker_trend ---------
 load("data/divorce_margarine.rda")
+.k_stss <- .reflavor_k$screen_time_vs_smart_speaker_trend
 screen_time_vs_smart_speaker_trend <- data.frame(
-  avg_daily_screen_time_hours = divorce_margarine$divorce_rate_maine,
-  smart_speaker_sales_index = divorce_margarine$margarine_consumption_per_capita,
-  year = divorce_margarine$year
+  avg_daily_screen_time_hours = .k_stss[["avg_daily_screen_time_hours"]] * divorce_margarine$divorce_rate_maine,
+  smart_speaker_sales_index = .k_stss[["smart_speaker_sales_index"]] * divorce_margarine$margarine_consumption_per_capita,
+  year = divorce_margarine$year                             # EXC: year
 )
 usethis::use_data(screen_time_vs_smart_speaker_trend, overwrite = TRUE)
 
@@ -151,10 +167,10 @@ load("data/us_contagious_diseases.rda")
 fitness_app_downloads_by_state <- data.frame(
   app_category = unname(.app_category_map[as.character(us_contagious_diseases$disease)]),
   state = us_contagious_diseases$state,
-  year = us_contagious_diseases$year,
-  weeks_tracked = us_contagious_diseases$weeks_reporting,
-  downloads = us_contagious_diseases$count,
-  population = us_contagious_diseases$population
+  year = us_contagious_diseases$year,                       # EXC: year
+  weeks_tracked = us_contagious_diseases$weeks_reporting,   # EXC: 0-52 coverage count
+  downloads = round(.reflavor_k$fitness_app_downloads_by_state[["downloads"]] * us_contagious_diseases$count),
+  population = us_contagious_diseases$population             # EXC: real state populations
 )
 usethis::use_data(fitness_app_downloads_by_state, overwrite = TRUE)
 
@@ -164,16 +180,17 @@ load("data/gapminder.rda")
   rng <- range(life_expectancy, na.rm = TRUE)
   1 + (life_expectancy - rng[1]) / (rng[2] - rng[1]) * 9
 }
+.k_gta <- .reflavor_k$global_tech_adoption
 global_tech_adoption <- data.frame(
   country = gapminder$country,
-  year = gapminder$year,
+  year = gapminder$year,                                    # EXC: year
   continent = gapminder$continent,
   region = gapminder$region,
-  gdp = gapminder$gdp,
-  active_user_base = gapminder$population,
-  avg_price_per_app_usd = gapminder$fertility,
-  app_uninstall_rate_per_1000 = gapminder$infant_mortality,
-  avg_daily_screen_time_hours = .rescale_screen_time(gapminder$life_expectancy)
+  gdp = .k_gta[["gdp"]] * gapminder$gdp,                    # feeds revenue_per_user_day
+  active_user_base = gapminder$population,                  # EXC: real populations; divide denominator
+  avg_price_per_app_usd = .k_gta[["avg_price_per_app_usd"]] * gapminder$fertility,
+  app_uninstall_rate_per_1000 = gapminder$infant_mortality, # EXC (flag "revisit"): per-1000 rate feeding logit-scale plots
+  avg_daily_screen_time_hours = .rescale_screen_time(gapminder$life_expectancy)  # linear rescale
 )
 usethis::use_data(global_tech_adoption, overwrite = TRUE)
 
@@ -242,8 +259,8 @@ usethis::use_data(sensor_activity_features, overwrite = TRUE)
 # reframed in the docs as a major app outage / forced update.
 load("data/pr-death-counts.rda")
 app_outage_engagement_impact <- data.frame(
-  date = pr_death_counts$date,
-  daily_active_users = pr_death_counts$deaths
+  date = pr_death_counts$date,                              # EXC: date
+  daily_active_users = round(.reflavor_k$app_outage_engagement_impact[["daily_active_users"]] * pr_death_counts$deaths)
 )
 usethis::use_data(app_outage_engagement_impact, overwrite = TRUE)
 
@@ -297,38 +314,38 @@ load("data/polls_us_election_2016.rda")   # loads both objects
 
 product_launch_forecast <- data.frame(
   market           = polls_us_election_2016$state,
-  startdate        = polls_us_election_2016$startdate,
-  enddate          = polls_us_election_2016$enddate,
+  startdate        = polls_us_election_2016$startdate,       # EXC: date
+  enddate          = polls_us_election_2016$enddate,         # EXC: date
   panel            = .panel_id,
   panel_grade      = polls_us_election_2016$grade,
-  samplesize       = polls_us_election_2016$samplesize,
-  respondents      = polls_us_election_2016$population,
-  raw_pref_new     = polls_us_election_2016$rawpoll_clinton,
-  raw_pref_current = polls_us_election_2016$rawpoll_trump,
-  raw_pref_switch  = polls_us_election_2016$rawpoll_johnson,
-  raw_pref_other   = polls_us_election_2016$rawpoll_mcmullin,
-  adj_pref_new     = polls_us_election_2016$adjpoll_clinton,
-  adj_pref_current = polls_us_election_2016$adjpoll_trump,
-  adj_pref_switch  = polls_us_election_2016$adjpoll_johnson,
-  adj_pref_other   = polls_us_election_2016$adjpoll_mcmullin
+  samplesize       = round(.reflavor_k$product_launch_forecast[["samplesize"]] * polls_us_election_2016$samplesize),
+  respondents      = polls_us_election_2016$population,      # EXC: character screen type
+  raw_pref_new     = polls_us_election_2016$rawpoll_clinton, # EXC: poll % [0,100]
+  raw_pref_current = polls_us_election_2016$rawpoll_trump,   # EXC: poll %
+  raw_pref_switch  = polls_us_election_2016$rawpoll_johnson, # EXC: poll %
+  raw_pref_other   = polls_us_election_2016$rawpoll_mcmullin,# EXC: poll %
+  adj_pref_new     = polls_us_election_2016$adjpoll_clinton, # EXC: poll %
+  adj_pref_current = polls_us_election_2016$adjpoll_trump,   # EXC: poll %
+  adj_pref_switch  = polls_us_election_2016$adjpoll_johnson, # EXC: poll %
+  adj_pref_other   = polls_us_election_2016$adjpoll_mcmullin # EXC: poll %
 )
 
 product_launch_results <- data.frame(
   market        = results_us_election_2016$state,
-  market_weight = results_us_election_2016$electoral_votes,
-  adopt_new     = results_us_election_2016$clinton,
-  adopt_current = results_us_election_2016$trump,
-  adopt_alt1    = results_us_election_2016$johnson,
-  adopt_alt2    = results_us_election_2016$stein,
-  adopt_alt3    = results_us_election_2016$mcmullin,
-  adopt_other   = results_us_election_2016$others
+  market_weight = results_us_election_2016$electoral_votes,  # EXC: weight
+  adopt_new     = results_us_election_2016$clinton,          # EXC: % [0,100]
+  adopt_current = results_us_election_2016$trump,            # EXC: %
+  adopt_alt1    = results_us_election_2016$johnson,          # EXC: %
+  adopt_alt2    = results_us_election_2016$stein,            # EXC: %
+  adopt_alt3    = results_us_election_2016$mcmullin,         # EXC: %
+  adopt_other   = results_us_election_2016$others            # EXC: %
 )
 
 usethis::use_data(product_launch_forecast, product_launch_results, overwrite = TRUE)
 
 # --- 21. results_us_election_2012 -> prior_launch_results -------------
 load("data/results_us_election_2012.rda")
-prior_launch_results <- data.frame(
+prior_launch_results <- data.frame(                         # all EXC (weight / % [0,100])
   market        = results_us_election_2012$state,
   market_weight = results_us_election_2012$electoral_votes,
   adopt_new     = results_us_election_2012$obama,
@@ -385,11 +402,11 @@ ui_redesign_surveys <- data.frame(
   panel          = sprintf("Panel %02d", as.integer(factor(brexit_polls$pollster))),
   method         = factor(ifelse(brexit_polls$poll_type == "Online", "remote", "lab"),
                           levels = c("remote", "lab")),
-  n_participants = brexit_polls$samplesize,
-  prefer_new     = brexit_polls$remain,
-  prefer_current = brexit_polls$leave,
-  undecided      = brexit_polls$undecided,
-  margin         = brexit_polls$spread
+  n_participants = round(.reflavor_k$ui_redesign_surveys[["n_participants"]] * brexit_polls$samplesize),
+  prefer_new     = brexit_polls$remain,                     # EXC: proportion [0,1]
+  prefer_current = brexit_polls$leave,                      # EXC: proportion
+  undecided      = brexit_polls$undecided,                  # EXC: proportion
+  margin         = brexit_polls$spread                      # EXC: derived margin
 )
 usethis::use_data(ui_redesign_surveys, overwrite = TRUE)
 
@@ -436,10 +453,11 @@ load("data/stars.rda")
   "F" = "sorting", "G" = "planning", "K" = "reading", "M" = "free_recall",
   "DA" = "n_back_1", "DB" = "n_back_2", "DF" = "n_back_3"
 )
+.k_ctm <- .reflavor_k$cognitive_task_metrics
 cognitive_task_metrics <- data.frame(
   session        = sprintf("S%02d", seq_len(nrow(stars))),
-  cognitive_load = stars$magnitude,
-  arousal_index  = stars$temp,
+  cognitive_load = .k_ctm[["cognitive_load"]] * stars$magnitude,
+  arousal_index  = .k_ctm[["arousal_index"]] * stars$temp,
   task_type      = unname(.task_type_map[as.character(stars$type)])
 )
 usethis::use_data(cognitive_task_metrics, overwrite = TRUE)
@@ -455,9 +473,9 @@ usethis::use_data(cognitive_task_metrics, overwrite = TRUE)
 load("data/greenhouse_gases.rda")
 .tech_map <- c("CO2" = "smartphones", "CH4" = "social_media", "N2O" = "streaming")
 tech_adoption_trends <- data.frame(
-  year           = greenhouse_gases$year,
+  year           = greenhouse_gases$year,                   # EXC: timeline index
   technology     = unname(.tech_map[greenhouse_gases$gas]),
-  adoption_index = greenhouse_gases$concentration
+  adoption_index = .reflavor_k$tech_adoption_trends[["adoption_index"]] * greenhouse_gases$concentration
 )
 usethis::use_data(tech_adoption_trends, overwrite = TRUE)
 
@@ -466,16 +484,20 @@ load("data/historic_co2.rda")
 .co2_source_map <- c("Ice Cores" = "reconstructed", "Mauna Loa" = "direct")
 connectivity_deep_history <- historic_co2
 names(connectivity_deep_history)[names(connectivity_deep_history) == "co2"] <- "connectivity_index"
+connectivity_deep_history$connectivity_index <-
+  .reflavor_k$connectivity_deep_history[["connectivity_index"]] * historic_co2$co2
+# year kept as-is (EXC: deep-time index, includes large negatives)
 connectivity_deep_history$source <- unname(.co2_source_map[historic_co2$source])
 usethis::use_data(connectivity_deep_history, overwrite = TRUE)
 
 # --- 28. temp_carbon -> screentime_wellbeing_series ----------------
 load("data/temp_carbon.rda")
+.k_sws <- .reflavor_k$screentime_wellbeing_series
 screentime_wellbeing_series <- data.frame(
-  year              = temp_carbon$year,
-  wellbeing_anomaly = temp_carbon$temp_anomaly,
-  mood_anomaly      = temp_carbon$land_anomaly,
-  sleep_anomaly     = temp_carbon$ocean_anomaly,
-  screen_time_index = temp_carbon$carbon_emissions
+  year              = temp_carbon$year,                     # EXC: year
+  wellbeing_anomaly = .k_sws[["wellbeing_anomaly"]] * temp_carbon$temp_anomaly,
+  mood_anomaly      = .k_sws[["mood_anomaly"]] * temp_carbon$land_anomaly,
+  sleep_anomaly     = .k_sws[["sleep_anomaly"]] * temp_carbon$ocean_anomaly,
+  screen_time_index = .k_sws[["screen_time_index"]] * temp_carbon$carbon_emissions
 )
 usethis::use_data(screentime_wellbeing_series, overwrite = TRUE)

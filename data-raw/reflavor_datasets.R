@@ -80,9 +80,11 @@ usethis::use_data(app_engagement_experiment, overwrite = TRUE)
 
 # --- 6. nyc_regents_scores -> cognitive_battery_scores -------------------
 load("data/nyc_regents_scores.rda")
-.k_cbs <- .reflavor_k$cognitive_battery_scores   # one shared factor (0.8) for all 6 columns
+.k_cbs <- .reflavor_k$cognitive_battery_scores   # one shared factor (0.8) for the 5 frequency columns
 cognitive_battery_scores <- data.frame(
-  score = round(.k_cbs[["score"]] * nyc_regents_scores$score),
+  score = nyc_regents_scores$score,   # EXC: row key (possible score 0-100), not a measurement --
+                                       # scaling+rounding it would collide distinct scores into
+                                       # the same bin (verified: 20 collisions out of 102 rows)
   attention_task = round(.k_cbs[["attention_task"]] * nyc_regents_scores$integrated_algebra),
   memory_task = round(.k_cbs[["memory_task"]] * nyc_regents_scores$global_history),
   usability_task = round(.k_cbs[["usability_task"]] * nyc_regents_scores$living_environment),

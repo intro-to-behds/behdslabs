@@ -36,8 +36,10 @@
     error_rate_pct = 1.3               # reads as a percent -- keep well under 100
   ),
   cognitive_battery_scores = c(
-    score = 0.8,                        # 0-100 exam score, keep <= 100 (benchmark 65 -> 52)
-    attention_task = 0.8,               # per-score frequency counts, same factor as score
+    # NOTE: `score` itself (the 0-100 row key) is EXC, not listed here --
+    # scaling+rounding it collides distinct scores into the same bin.
+    # Benchmark 65 in the docs/book stays 65; only the 5 frequency counts scale.
+    attention_task = 0.8,
     memory_task = 0.8,
     usability_task = 0.8,
     reading_task = 0.8,

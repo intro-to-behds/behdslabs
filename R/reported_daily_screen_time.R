@@ -14,12 +14,15 @@
 #' @keywords datasets
 #'
 #' @source Original \code{dslabs::outlier_example} values (Irizarry & Gill),
-#'   relabeled -- no rescaling needed, as the original values already sit in
-#'   a plausible daily-hours range.
+#'   relabeled and multiplied by a fixed factor (k = 2; see
+#'   REFLAVORING_PLAN.md ground rule 3).
 #'
 #' @note These are not real screen-time data. They are the original
-#'   \code{dslabs::outlier_example} values, relabeled. A synthetic or real,
-#'   ethically-sourced replacement is planned for a future release (see
+#'   \code{dslabs::outlier_example} values, relabeled and multiplied by a
+#'   fixed factor (k = 2) so no value matches the dslabs original (see
+#'   REFLAVORING_PLAN.md ground rule 3) -- the outlier and cluster
+#'   structure are preserved. A synthetic or real, ethically-sourced
+#'   replacement is planned for a future release (see
 #'   \code{BDS_development_plan.md} Phase 2).
 #'
 #' @details
@@ -37,6 +40,6 @@
 #' mean(reported_daily_screen_time); median(reported_daily_screen_time)
 #'
 #' # Remove the outlier and compare again.
-#' clean <- reported_daily_screen_time[reported_daily_screen_time < 10]
+#' clean <- reported_daily_screen_time[reported_daily_screen_time < 50]
 #' mean(clean); median(clean)
 "reported_daily_screen_time"

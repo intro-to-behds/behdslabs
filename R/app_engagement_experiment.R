@@ -23,12 +23,18 @@
 #' @keywords datasets
 #'
 #' @source Original \code{dslabs::mice_weights} values (data provided by
-#'   Karen Svenson, Jackson Laboratories), relabeled.
+#'   Karen Svenson, Jackson Laboratories), relabeled and multiplied by a
+#'   fixed per-column factor (\code{engagement_score}, \code{consistency_index}:
+#'   k = 2; \code{error_rate_pct}: k = 1.3; see REFLAVORING_PLAN.md ground
+#'   rule 3).
 #'
 #' @note These are not real app-usage or engagement data. They are the
-#'   original \code{dslabs::mice_weights} values, relabeled. A synthetic or
-#'   real, ethically-sourced replacement is planned for a future release
-#'   (see \code{BDS_development_plan.md} Phase 2).
+#'   original \code{dslabs::mice_weights} values, relabeled, with
+#'   \code{engagement_score} and \code{consistency_index} multiplied by
+#'   k = 2 and \code{error_rate_pct} by k = 1.3 so none of the three
+#'   matches the dslabs original (see REFLAVORING_PLAN.md ground rule 3).
+#'   A synthetic or real, ethically-sourced replacement is planned for a
+#'   future release (see \code{BDS_development_plan.md} Phase 2).
 #'
 #' @details
 #' **Teaching connection:** the two-factor design (UI version x cohort)

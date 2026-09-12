@@ -22,12 +22,19 @@
 #' @keywords datasets
 #'
 #' @source Original \code{dslabs::research_funding_rates} values (Irizarry &
-#'   Gill; van der Lee & Ellemers, PNAS 2015), relabeled -- only the
-#'   \code{discipline} column is remapped to technology-domain names; all
-#'   numeric columns are unchanged.
+#'   Gill; van der Lee & Ellemers, PNAS 2015), relabeled -- the
+#'   \code{discipline} column is remapped to technology-domain names; the
+#'   6 application/award count columns are multiplied by one shared factor
+#'   (k = 2, so \code{applications_total = applications_men +
+#'   applications_women} still holds); the 3 \code{success_rates_*}
+#'   percentage columns are kept as-is (see REFLAVORING_PLAN.md ground
+#'   rule 3).
 #'
 #' @note These are not real grant-funding data. They are the original
-#'   \code{dslabs::research_funding_rates} values, relabeled. A synthetic or
+#'   \code{dslabs::research_funding_rates} values, relabeled, with the 6
+#'   count columns multiplied by a shared factor (k = 2) so none matches
+#'   the dslabs original; the 3 bounded \code{success_rates_*} columns are
+#'   unchanged (see REFLAVORING_PLAN.md ground rule 3). A synthetic or
 #'   real, ethically-sourced replacement is planned for a future release
 #'   (see \code{BDS_development_plan.md} Phase 2).
 #'

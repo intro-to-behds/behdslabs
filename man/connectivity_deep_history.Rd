@@ -9,9 +9,10 @@ A tibble (694 x 3).
 }
 \source{
 Original \code{dslabs::historic_co2} values (Irizarry & Gill).
-  \code{year} and \code{co2} values are unchanged (\code{co2} ->
-  \code{connectivity_index}); \code{source} "Mauna Loa"/"Ice Cores" ->
-  "direct"/"reconstructed".
+  \code{co2} -> \code{connectivity_index} is multiplied by a fixed
+  factor (k = 2); \code{year} is unchanged; \code{source} "Mauna
+  Loa"/"Ice Cores" -> "direct"/"reconstructed" (see REFLAVORING_PLAN.md
+  ground rule 3).
 }
 \usage{
 connectivity_deep_history
@@ -40,9 +41,12 @@ visual treatment and carry different uncertainty.
 }
 \note{
 These are not real connectivity data. They are the original
-  \code{dslabs::historic_co2} values, relabeled for narrative fit. A
-  synthetic or real, ethically-sourced replacement is planned for a
-  future release (see \code{BDS_development_plan.md} Phase 2).
+  \code{dslabs::historic_co2} values, relabeled for narrative fit, with
+  \code{connectivity_index} multiplied by a fixed factor (k = 2) so it
+  no longer matches the dslabs original (see REFLAVORING_PLAN.md ground
+  rule 3). A synthetic or real, ethically-sourced replacement is
+  planned for a future release (see \code{BDS_development_plan.md}
+  Phase 2).
 }
 \examples{
 library(ggplot2)

@@ -10,8 +10,9 @@ An object of class \code{"data.frame"}.
 \source{
 Original \code{dslabs::pr_death_counts} values (Irizarry &
   Gill): daily death counts in Puerto Rico around Hurricane Maria
-  (2017). Counts are unchanged; \code{deaths} -> \code{daily_active_users}
-  and the event is reframed as an app outage.
+  (2017). \code{deaths} -> \code{daily_active_users} is multiplied by a
+  fixed factor (k = 2) and the event is reframed as an app outage;
+  \code{date} is unchanged (see REFLAVORING_PLAN.md ground rule 3).
 }
 \usage{
 app_outage_engagement_impact
@@ -38,9 +39,12 @@ pre-event baseline (seasonality, trend, day-of-week effects).
 }
 \note{
 These are not real app-usage data. They are the original
-  \code{dslabs::pr_death_counts} values (Irizarry & Gill), relabeled. A
-  synthetic or real, ethically-sourced replacement is planned for a
-  future release (see \code{BDS_development_plan.md} Phase 2).
+  \code{dslabs::pr_death_counts} values (Irizarry & Gill), relabeled,
+  with \code{daily_active_users} multiplied by a fixed factor (k = 2)
+  so it no longer matches the dslabs original (see REFLAVORING_PLAN.md
+  ground rule 3). A synthetic or real, ethically-sourced replacement is
+  planned for a future release (see \code{BDS_development_plan.md}
+  Phase 2).
 }
 \examples{
 with(app_outage_engagement_impact, plot(date, daily_active_users, type = "l"))

@@ -8,11 +8,13 @@
 An object of class \code{"data.frame"} (268 x 5).
 }
 \source{
-Original \code{dslabs::temp_carbon} values (Irizarry & Gill).
-  All numeric values unchanged: \code{temp_anomaly} ->
+Original \code{dslabs::temp_carbon} values (Irizarry & Gill),
+  all multiplied by one shared factor (k = 2, so the three co-plotted
+  anomaly series keep their relative scale): \code{temp_anomaly} ->
   \code{wellbeing_anomaly}, \code{land_anomaly} -> \code{mood_anomaly},
   \code{ocean_anomaly} -> \code{sleep_anomaly}, \code{carbon_emissions}
-  -> \code{screen_time_index}.
+  -> \code{screen_time_index}. \code{year} is unchanged (see
+  REFLAVORING_PLAN.md ground rule 3).
 }
 \usage{
 screentime_wellbeing_series
@@ -45,8 +47,10 @@ decades).
 \note{
 These are not real wellbeing or screen-time data. They are the
   original \code{dslabs::temp_carbon} values, relabeled for narrative
-  fit. A synthetic or real, ethically-sourced replacement is planned for
-  a future release (see \code{BDS_development_plan.md} Phase 2).
+  fit and multiplied by a shared factor (k = 2) so none matches the
+  dslabs original (see REFLAVORING_PLAN.md ground rule 3). A synthetic
+  or real, ethically-sourced replacement is planned for a future
+  release (see \code{BDS_development_plan.md} Phase 2).
 }
 \examples{
 with(screentime_wellbeing_series,

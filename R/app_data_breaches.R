@@ -21,12 +21,17 @@
 #' @keywords datasets
 #'
 #' @source US Census Bureau, uspopulation.org. Incident counts are the
-#'   original \code{dslabs::murders$total} values, relabeled.
+#'   original \code{dslabs::murders$total} values, relabeled and multiplied
+#'   by k = 2 (\code{population} is kept as-is; see REFLAVORING_PLAN.md
+#'   ground rule 3).
 #'
 #' @note These values are not real data-breach/incident data. They are the
 #'   original \code{dslabs::murders} values (Irizarry & Gill), relabeled for
-#'   narrative fit. A synthetic or real, ethically-sourced replacement is
-#'   planned for a future release (see \code{BDS_development_plan.md} Phase 2).
+#'   narrative fit and, for \code{incidents}, multiplied by a fixed factor
+#'   (k = 2) so no value matches the dslabs original (see
+#'   REFLAVORING_PLAN.md ground rule 3; \code{population} is unchanged). A
+#'   synthetic or real, ethically-sourced replacement is planned for a
+#'   future release (see \code{BDS_development_plan.md} Phase 2).
 #'
 #' @details
 #' **Teaching connection:** computing population-adjusted rates and

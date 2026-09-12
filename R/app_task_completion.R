@@ -22,12 +22,19 @@
 #'
 #' @source Original \code{dslabs::admissions} values (Irizarry & Gill;
 #'   originally PJ Bickel, EA Hammel, and JW O'Connell, Science 1975),
-#'   relabeled.
+#'   relabeled. \code{n_attempts} is multiplied by a fixed factor (k = 2);
+#'   \code{completion_rate} is a bounded percentage and kept as-is (see
+#'   REFLAVORING_PLAN.md ground rule 3).
 #'
 #' @note These are not real app-usage data. They are the original
-#'   \code{dslabs::admissions} values, relabeled. A synthetic or real,
-#'   ethically-sourced replacement is planned for a future release (see
-#'   \code{BDS_development_plan.md} Phase 2).
+#'   \code{dslabs::admissions} values, relabeled, with \code{n_attempts}
+#'   multiplied by a fixed factor (k = 2, applied uniformly so the
+#'   Simpson's-paradox pattern below is preserved) so it no longer matches
+#'   the dslabs original; \code{completion_rate} stays unchanged because
+#'   it is a bounded [0,100] percentage (see REFLAVORING_PLAN.md ground
+#'   rule 3). A synthetic or real, ethically-sourced replacement is
+#'   planned for a future release (see \code{BDS_development_plan.md}
+#'   Phase 2).
 #'
 #' @details
 #' **Teaching connection:** app A/B testing and conversion funnels often

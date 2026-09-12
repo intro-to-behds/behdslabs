@@ -24,15 +24,18 @@
 #' @keywords datasets
 #'
 #' @source Original \code{dslabs::stars} values (physical properties of
-#'   stars, via Irizarry & Gill). \code{magnitude} and \code{temp} values
-#'   are unchanged (\code{magnitude} -> \code{cognitive_load}, \code{temp}
-#'   -> \code{arousal_index}); \code{star} -> anonymized \code{session};
-#'   the 10 OBAFGKM(+white-dwarf) spectral classes are relabeled 1:1 to 10
-#'   task types.
+#'   stars, via Irizarry & Gill). \code{magnitude} -> \code{cognitive_load}
+#'   and \code{temp} -> \code{arousal_index} are each multiplied by a
+#'   fixed factor (k = 2); \code{star} -> anonymized \code{session}; the
+#'   10 OBAFGKM(+white-dwarf) spectral classes are relabeled 1:1 to 10
+#'   task types (see REFLAVORING_PLAN.md ground rule 3).
 #'
 #' @note These are not real cognitive-task data. They are the original
-#'   \code{dslabs::stars} values, relabeled for narrative fit. A synthetic
-#'   or real, ethically-sourced replacement is planned for a future release
+#'   \code{dslabs::stars} values, relabeled for narrative fit, with
+#'   \code{cognitive_load} and \code{arousal_index} multiplied by a fixed
+#'   factor (k = 2) so neither matches the dslabs original (see
+#'   REFLAVORING_PLAN.md ground rule 3). A synthetic or real,
+#'   ethically-sourced replacement is planned for a future release
 #'   (see \code{BDS_development_plan.md} Phase 2).
 #'
 #' @details

@@ -22,11 +22,18 @@
 #' @keywords datasets
 #'
 #' @source Original \code{dslabs::nyc_regents_scores} values (Irizarry &
-#'   Gill), relabeled.
+#'   Gill), relabeled. The 5 frequency columns are multiplied by a shared
+#'   factor (k = 0.8); \code{score} itself is the row key (the possible
+#'   score, 0-100) and is kept as-is, since scaling and rounding it would
+#'   collide distinct scores into the same bin (see REFLAVORING_PLAN.md
+#'   ground rule 3).
 #'
 #' @note These are not real cognitive-testing data. They are the original
-#'   \code{dslabs::nyc_regents_scores} values, relabeled. A synthetic or
-#'   real, ethically-sourced replacement is planned for a future release
+#'   \code{dslabs::nyc_regents_scores} values, relabeled, with the 5
+#'   frequency columns multiplied by a shared factor (k = 0.8) so none
+#'   matches the dslabs original; \code{score} (the row key) is unchanged
+#'   (see REFLAVORING_PLAN.md ground rule 3). A synthetic or real,
+#'   ethically-sourced replacement is planned for a future release
 #'   (see \code{BDS_development_plan.md} Phase 2).
 #'
 #' @details

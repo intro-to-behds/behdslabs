@@ -20,15 +20,17 @@
 #' @keywords datasets
 #'
 #' @source Original \code{dslabs::greenhouse_gases} values (Irizarry &
-#'   Gill). \code{concentration} values are unchanged; the three gases
-#'   (CO2, CH4, N2O) are relabeled to three technologies and
-#'   \code{concentration} -> \code{adoption_index}.
+#'   Gill). \code{concentration} -> \code{adoption_index} is multiplied by
+#'   a fixed factor (k = 2); the three gases (CO2, CH4, N2O) are relabeled
+#'   to three technologies (see REFLAVORING_PLAN.md ground rule 3).
 #'
 #' @note These are not real technology-adoption data. They are the
 #'   original \code{dslabs::greenhouse_gases} values, relabeled for
-#'   narrative fit. A synthetic or real, ethically-sourced replacement is
-#'   planned for a future release (see \code{BDS_development_plan.md}
-#'   Phase 2).
+#'   narrative fit, with \code{adoption_index} multiplied by a fixed
+#'   factor (k = 2) so it no longer matches the dslabs original (see
+#'   REFLAVORING_PLAN.md ground rule 3). A synthetic or real,
+#'   ethically-sourced replacement is planned for a future release (see
+#'   \code{BDS_development_plan.md} Phase 2).
 #'
 #' @details
 #' **Teaching connection:** long-horizon trend visualisation -- one line

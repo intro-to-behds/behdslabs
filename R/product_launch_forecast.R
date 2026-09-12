@@ -51,8 +51,11 @@
 #'
 #' @source Original \code{dslabs::polls_us_election_2016} and
 #'   \code{dslabs::results_us_election_2016} values (Irizarry & Gill;
-#'   FiveThirtyEight / Ballotpedia). Structures and all numeric values are
-#'   unchanged. \code{state} -> \code{market}; \code{pollster} ->
+#'   FiveThirtyEight / Ballotpedia). \code{samplesize} is multiplied by a
+#'   fixed factor (k = 2); all other numeric values (percentages,
+#'   \code{market_weight}, \code{respondents}) are kept as-is (flagged for
+#'   a future compliant transform -- see REFLAVORING_PLAN.md "Flagged
+#'   value exceptions"). \code{state} -> \code{market}; \code{pollster} ->
 #'   anonymized \code{panel}; \code{grade} -> \code{panel_grade};
 #'   \code{electoral_votes} -> \code{market_weight}; the 2016 candidates
 #'   map to the three preference options: Clinton -> new, Trump ->
@@ -60,9 +63,13 @@
 #'
 #' @note These are not real product-survey data. They are the original
 #'   \code{dslabs} 2016 US-election polling and results values, relabeled
-#'   for narrative fit. A synthetic or real, ethically-sourced replacement
-#'   is planned for a future release (see \code{BDS_development_plan.md}
-#'   Phase 2).
+#'   for narrative fit, with \code{samplesize} multiplied by a fixed
+#'   factor (k = 2) so it no longer matches the dslabs original (see
+#'   REFLAVORING_PLAN.md ground rule 3). The percentage and weight columns
+#'   are still byte-identical to the dslabs original -- flagged in
+#'   REFLAVORING_PLAN.md as a case to revisit. A synthetic or real,
+#'   ethically-sourced replacement is planned for a future release (see
+#'   \code{BDS_development_plan.md} Phase 2).
 #'
 #' @details
 #' **Teaching connection:** aggregating many noisy pre-launch preference

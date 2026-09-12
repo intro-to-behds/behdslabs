@@ -31,16 +31,25 @@
 #' @keywords datasets
 #'
 #' @source Original \code{dslabs::brexit_polls} values (Irizarry & Gill;
-#'   2016 UK EU-referendum polling, via Wikipedia). All dates and numeric
-#'   values are unchanged. \code{pollster} -> anonymized \code{panel};
+#'   2016 UK EU-referendum polling, via Wikipedia). \code{samplesize} ->
+#'   \code{n_participants} is multiplied by a fixed factor (k = 2); dates
+#'   and the proportion columns (\code{prefer_new}, \code{prefer_current},
+#'   \code{undecided}, \code{margin}) are kept as-is (flagged for a future
+#'   compliant transform -- see REFLAVORING_PLAN.md "Flagged value
+#'   exceptions"). \code{pollster} -> anonymized \code{panel};
 #'   \code{poll_type} Online/Telephone -> \code{method} remote/lab;
 #'   \code{remain}/\code{leave} -> \code{prefer_new}/\code{prefer_current};
 #'   \code{spread} -> \code{margin}.
 #'
 #' @note These are not real UX-survey data. They are the original
-#'   \code{dslabs::brexit_polls} values, relabeled for narrative fit. A
-#'   synthetic or real, ethically-sourced replacement is planned for a
-#'   future release (see \code{BDS_development_plan.md} Phase 2).
+#'   \code{dslabs::brexit_polls} values, relabeled for narrative fit, with
+#'   \code{n_participants} multiplied by a fixed factor (k = 2) so it no
+#'   longer matches the dslabs original (see REFLAVORING_PLAN.md ground
+#'   rule 3). The proportion columns are still byte-identical to the
+#'   dslabs original -- flagged in REFLAVORING_PLAN.md as a case to
+#'   revisit. A synthetic or real, ethically-sourced replacement is
+#'   planned for a future release (see \code{BDS_development_plan.md}
+#'   Phase 2).
 #'
 #' @details
 #' **Teaching connection:** the online-vs-telephone gap in referendum

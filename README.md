@@ -2,6 +2,20 @@
 
 This package is the adaptation of the dslabs package by R. A. Irizarry. The package is meant to be used together with the book "Introduction to Behavioral Data Science", a direct adapation of the "Introduction to Data Science" book by R. A. Irizarry. Modifications and new chapters by C. Costa e G. Arcara.
 
+## Installation
+
+`behdslabs` is not on CRAN — install it directly from GitHub ([intro-to-behds/behdslabs](https://github.com/intro-to-behds/behdslabs)):
+
+```r
+# install.packages("pak")  # if not already installed
+pak::pak("intro-to-behds/behdslabs")
+
+# alternatively, with remotes:
+# remotes::install_github("intro-to-behds/behdslabs")
+```
+
+Then load it as usual: `library(behdslabs)`.
+
 ## Relabeled datasets
 
 A subset of datasets (`app_data_breaches`, `reaction_times`, `wearable_onboarding_height`, `app_task_completion`, `app_engagement_experiment`, `cognitive_battery_scores`, `reported_daily_screen_time`, `daily_mood_ratings`, `app_churn_prob`, `feature_preference_trend`, `tech_grant_funding_gender_gap`, `screen_time_vs_smart_speaker_trend`, `fitness_app_downloads_by_state`, `global_tech_adoption`) have been added alongside the original dslabs datasets, relabeled with a digital-technology / wearable / neurophysiological theme to match the *Behavioural Data Science* course.

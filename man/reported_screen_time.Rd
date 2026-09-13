@@ -66,7 +66,6 @@ This is not real screen-time data. It is a synthetic dataset
 }
 \examples{
 library(dplyr)
-library(stringr)
 
 head(reported_screen_time)
 

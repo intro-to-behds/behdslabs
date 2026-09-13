@@ -60,7 +60,6 @@
 #'
 #' @examples
 #' library(dplyr)
-#' library(stringr)
 #'
 #' head(reported_screen_time)
 #'

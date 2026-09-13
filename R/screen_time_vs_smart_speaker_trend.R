@@ -19,12 +19,18 @@
 #' @keywords datasets
 #'
 #' @source Original \code{dslabs::divorce_margarine} values (Irizarry &
-#'   Gill; Tyler Vigen's spurious correlations), relabeled.
+#'   Gill; Tyler Vigen's spurious correlations), relabeled and multiplied
+#'   by a fixed factor (k = 2 for both series; see REFLAVORING_PLAN.md
+#'   ground rule 3).
 #'
 #' @note These are not real screen-time or sales data. They are the
-#'   original \code{dslabs::divorce_margarine} values, relabeled. A
-#'   synthetic or real, ethically-sourced replacement is planned for a
-#'   future release (see \code{BDS_development_plan.md} Phase 2).
+#'   original \code{dslabs::divorce_margarine} values, relabeled and
+#'   multiplied by a fixed factor (k = 2 for both series, so neither
+#'   matches the dslabs original while the near-perfect spurious
+#'   correlation between them is preserved; see REFLAVORING_PLAN.md
+#'   ground rule 3). A synthetic or real, ethically-sourced replacement is
+#'   planned for a future release (see \code{BDS_development_plan.md}
+#'   Phase 2).
 #'
 #' @details
 #' **Teaching connection:** app analytics dashboards routinely surface

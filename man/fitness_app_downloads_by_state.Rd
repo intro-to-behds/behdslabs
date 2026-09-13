@@ -10,8 +10,10 @@ An object of class \code{"data.frame"}.
 \source{
 Original \code{dslabs::us_contagious_diseases} values (Irizarry &
   Gill). The 7 disease categories are relabeled 1:1 to 7 fitness-app
-  categories; \code{count} -> \code{downloads}; \code{weeks_reporting} ->
-  \code{weeks_tracked}. Numeric values are otherwise unchanged.
+  categories; \code{count} -> \code{downloads} is multiplied by a fixed
+  factor (k = 2); \code{weeks_reporting} -> \code{weeks_tracked} and
+  \code{population} are kept as-is (see REFLAVORING_PLAN.md ground
+  rule 3).
 }
 \usage{
 fitness_app_downloads_by_state
@@ -45,9 +47,12 @@ download/uninstall data around a marketing campaign or feature launch.
 }
 \note{
 These are not real app-download data. They are the original
-  \code{dslabs::us_contagious_diseases} values, relabeled. A synthetic or
-  real, ethically-sourced replacement is planned for a future release
-  (see \code{BDS_development_plan.md} Phase 2).
+  \code{dslabs::us_contagious_diseases} values, relabeled, with
+  \code{downloads} multiplied by a fixed factor (k = 2) so it no longer
+  matches the dslabs original; \code{population}, \code{weeks_tracked}
+  and \code{year} are unchanged (see REFLAVORING_PLAN.md ground rule 3).
+  A synthetic or real, ethically-sourced replacement is planned for a
+  future release (see \code{BDS_development_plan.md} Phase 2).
 }
 \examples{
 fitness_app_downloads_by_state |> head()

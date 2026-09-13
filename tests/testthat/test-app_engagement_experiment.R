@@ -1,7 +1,11 @@
-test_that("app_engagement_experiment preserves mice_weights values exactly", {
-  expect_equal(app_engagement_experiment$engagement_score, mice_weights$body_weight)
-  expect_equal(app_engagement_experiment$consistency_index, mice_weights$bone_density)
-  expect_equal(app_engagement_experiment$error_rate_pct, mice_weights$percent_fat)
+test_that("app_engagement_experiment is mice_weights scaled per column", {
+  k <- K$app_engagement_experiment
+  expect_equal(app_engagement_experiment$engagement_score,
+               k[["engagement_score"]] * mice_weights$body_weight)
+  expect_equal(app_engagement_experiment$consistency_index,
+               k[["consistency_index"]] * mice_weights$bone_density)
+  expect_equal(app_engagement_experiment$error_rate_pct,
+               k[["error_rate_pct"]] * mice_weights$percent_fat)
   expect_equal(app_engagement_experiment$sex, mice_weights$sex)
   expect_equal(app_engagement_experiment$cohort, mice_weights$gen)
   expect_equal(app_engagement_experiment$test_batch, mice_weights$litter)

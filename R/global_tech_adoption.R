@@ -28,18 +28,28 @@
 #' @keywords datasets
 #'
 #' @source Original \code{dslabs::gapminder} values (Irizarry & Gill).
-#'   \code{population} -> \code{active_user_base}; \code{fertility} ->
-#'   \code{avg_price_per_app_usd}; \code{infant_mortality} ->
-#'   \code{app_uninstall_rate_per_1000} (both unchanged numerically);
-#'   \code{life_expectancy} -> \code{avg_daily_screen_time_hours}, linearly
-#'   rescaled from its original ~30-85 year range to a ~1-10 hour range.
-#'   \code{country}, \code{year}, \code{continent}, \code{region}, and
-#'   \code{gdp} are unchanged.
+#'   \code{gdp} is multiplied by a fixed factor (k = 2); \code{fertility} ->
+#'   \code{avg_price_per_app_usd} is multiplied by k = 1.5;
+#'   \code{population} -> \code{active_user_base} and
+#'   \code{infant_mortality} -> \code{app_uninstall_rate_per_1000} are kept
+#'   as-is (flagged for a future compliant transform -- see
+#'   REFLAVORING_PLAN.md "Flagged value exceptions");
+#'   \code{life_expectancy} -> \code{avg_daily_screen_time_hours} is
+#'   linearly rescaled from its original ~30-85 year range to a ~1-10 hour
+#'   range. \code{country}, \code{year}, \code{continent}, and
+#'   \code{region} are unchanged (see REFLAVORING_PLAN.md ground rule 3).
 #'
 #' @note These are not real technology-adoption data. They are the original
-#'   \code{dslabs::gapminder} values, relabeled and in one case linearly
-#'   rescaled. A synthetic or real, ethically-sourced replacement is planned
-#'   for a future release (see \code{BDS_development_plan.md} Phase 2).
+#'   \code{dslabs::gapminder} values, relabeled, with \code{gdp} multiplied
+#'   by k = 2 and \code{avg_price_per_app_usd} by k = 1.5 so neither
+#'   matches the dslabs original, and \code{avg_daily_screen_time_hours}
+#'   linearly rescaled. \code{active_user_base} and
+#'   \code{app_uninstall_rate_per_1000} are still byte-identical to the
+#'   dslabs original -- flagged in REFLAVORING_PLAN.md as a case to revisit,
+#'   left as-is for now so the retention/logit plots built on
+#'   \code{app_uninstall_rate_per_1000} don't need re-deriving. A synthetic
+#'   or real, ethically-sourced replacement is planned for a future release
+#'   (see \code{BDS_development_plan.md} Phase 2).
 #'
 #' @details
 #' **Teaching connection:** the same longitudinal framework used for

@@ -1,9 +1,13 @@
-test_that("fitness_app_downloads_by_state preserves us_contagious_diseases values exactly", {
+test_that("fitness_app_downloads_by_state: downloads scaled, other columns kept", {
   expect_equal(fitness_app_downloads_by_state$state, us_contagious_diseases$state)
-  expect_equal(fitness_app_downloads_by_state$year, us_contagious_diseases$year)
-  expect_equal(fitness_app_downloads_by_state$weeks_tracked, us_contagious_diseases$weeks_reporting)
-  expect_equal(fitness_app_downloads_by_state$downloads, us_contagious_diseases$count)
-  expect_equal(fitness_app_downloads_by_state$population, us_contagious_diseases$population)
+  expect_equal(fitness_app_downloads_by_state$year, us_contagious_diseases$year)   # EXC
+  expect_equal(fitness_app_downloads_by_state$weeks_tracked,
+               us_contagious_diseases$weeks_reporting)   # EXC
+  expect_equal(fitness_app_downloads_by_state$downloads,
+               round(K$fitness_app_downloads_by_state[["downloads"]] *
+                       us_contagious_diseases$count))
+  expect_equal(fitness_app_downloads_by_state$population,
+               us_contagious_diseases$population)   # EXC
 })
 
 test_that("app_category is a 1:1 relabeling of disease, not a re-derivation", {

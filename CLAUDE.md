@@ -10,6 +10,8 @@ Course planning lives in the separate course hub: `/Users/giorgioarcara/Document
 
 Original datasets (murders, baseball, elections, genomics) are being replaced with behavioural equivalents — reaction times, accuracy scores, survey/Likert data, experiment logs — per the course's key adaptation rule. See `REFLAVORING_PLAN.md` for the full dataset-by-dataset plan (Tier 1 implemented, Tier 2/3 proposed) and `REFRAMING_PLAN_ARCHIVE.md` for an earlier, superseded approach whose analogy content was mined into the current plan.
 
+**Values must differ from the dslabs originals.** Every reflavoured numeric column is a deterministic transform of its dslabs source and must not be byte-identical to it. The default transform is multiplicative — `new = k * old`, one documented constant `k ≠ 1` per column (`round()`ed for count columns) — with documented exceptions that stay identical (dates/`year`, IDs and weights, proportions/probabilities bounded to [0,1]/[0,100], compositional percentages, opaque pixel/feature matrices, free text) plus two columns that are linearly range-rescaled instead (`reaction_times$rt_ms`, `global_tech_adoption$avg_daily_screen_time_hours`). Constants live in `R/reflavor_constants.R` and are enforced by `tests/testthat/`.
+
 ## Structure
 
 Standard R package layout: `R/` (functions), `data/` (datasets), `man/` (docs), `DESCRIPTION`/`NAMESPACE`.

@@ -1,6 +1,14 @@
 # Reflavoring plan: `behdslabs` datasets for Behavioural Data Science / CogTech
 
-Status: **Tier 1 implemented and doc-enriched** (branch `reflavor-tier1-datasets`), Tier 2/3 proposed but not yet built. See `REFRAMING_PLAN_ARCHIVE.md` for an earlier, superseded documentation-only plan whose analogy content was mined into this one (Tier-1 datasets' `@details`/`@examples`, and the Tier 2/3 tables below).
+Status: **Tier 1 implemented and doc-enriched** (branch `reflavor-tier1-datasets`). Most Tier 2/3 entries have since been built too (2026-09-08/09) — see `PACKAGE_PLAN_DIARY.md`.
+
+> **Availability is per row, not per tier.** A dataset exists if its own row says so: every Tier 1
+> row, plus any Tier 2/3 row carrying an inline `BUILT <date>` marker. The Tier 1/2/3 headings
+> below record how the work was originally grouped and prioritised, **not** what is available
+> today — do not read "Tier 2" as "not built". Tools that gate on availability (e.g.
+> `/reflavour-chapter`) must check the row marker.
+
+See `REFRAMING_PLAN_ARCHIVE.md` for an earlier, superseded documentation-only plan whose analogy content was mined into this one (Tier-1 datasets' `@details`/`@examples`, and the Tier 2/3 tables below).
 
 ## Why
 

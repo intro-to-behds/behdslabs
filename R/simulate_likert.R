@@ -1,0 +1,103 @@
+#' Simulate responses to a multi-item Likert scale
+#'
+#' Generates responses to a psychological scale from an explicit Classical Test
+#' Theory model. Each respondent has a \emph{true score} on a latent construct;
+#' each item is that true score plus its own independent measurement error
+#' (\eqn{X = T + E}); and the resulting value is then cut into ordered response
+#' categories. Written for the measurement chapter of the Behavioural Data
+#' Science course, where the point is precisely that the true score is
+#' something you can never observe in real data -- so it is returned here.
+#'
+#' The response categories are \strong{ordinal, not interval}, by default: the
+#' cut points are unequally spaced, so a step from 1 to 2 is not the same
+#' distance on the latent scale as a step from 4 to 5. Setting
+#' \code{equal_spacing = TRUE} produces evenly spaced cut points instead, which
+#' makes the item behave like an interval-scale measure. Comparing the two is
+#' the intended use.
+#'
+#' Note that this is a \emph{simulator}, not one of the package's relabeled
+#' datasets: it is not derived from a \code{dslabs} original, so the
+#' reflavoring rules documented in \code{REFLAVORING_PLAN.md} do not apply.
+#'
+#' @param n Number of respondents.
+#' @param n_items Number of items in the scale.
+#' @param n_levels Number of response categories per item (e.g. 5 for a
+#'   1-5 rating).
+#' @param true_score Optional numeric vector of true scores, one per
+#'   respondent, on a standardised latent scale. Supply the vector returned by
+#'   an earlier call to simulate a \emph{retest}: the same people, the same
+#'   underlying construct, fresh measurement error. If \code{NULL} (default),
+#'   true scores are drawn from a standard normal distribution.
+#' @param group Optional grouping variable. Either a vector of length \code{n},
+#'   or a short vector of level names (e.g.
+#'   \code{c("standard", "redesigned")}) whose levels are then assigned to
+#'   respondents in turn. If \code{NULL} (default), no group column is
+#'   returned.
+#' @param group_effect Difference between consecutive group levels on the
+#'   latent construct, in standard deviation units. Ignored when
+#'   \code{true_score} is supplied.
+#' @param group_sd Standard deviation of the latent construct within each
+#'   group: either one value (shared) or one per group level. Groups can share
+#'   a mean and still differ in how spread out they are, which on a scale with
+#'   a ceiling is enough to make the two groups' \emph{scores} differ even
+#'   though the construct does not. Ignored when \code{true_score} is supplied.
+#' @param error_sd Standard deviation of the per-item measurement error. This
+#'   is the reliability dial: larger values mean a noisier, less reliable
+#'   scale.
+#' @param thresholds Optional numeric vector of \code{n_levels - 1} cut points
+#'   on the latent scale. If \code{NULL} (default), cut points are generated
+#'   according to \code{equal_spacing}.
+#' @param equal_spacing If \code{TRUE}, use evenly spaced cut points
+#'   (interval-like). If \code{FALSE} (default), use unequally spaced cut
+#'   points (genuinely ordinal). Ignored when \code{thresholds} is supplied.
+#' @param seed Optional integer passed to \code{set.seed()} for
+#'   reproducibility.
+#'
+#' @return A data frame with one row per respondent and the columns:
+#'   \code{respondent}, \code{group} (only when \code{group} was supplied),
+#'   \code{item_1} .. \code{item_<n_items>}, \code{total} (the sum of the
+#'   items) and \code{true_score} (the latent value the responses were
+#'   generated from).
+#'
+#' @seealso \code{\link{simulate_sdt}}
+#'
+#' @examples
+#' # A 5-item app-satisfaction scale, two UI versions
+#' satisfaction <- simulate_likert(n = 200,
+#'                                 group = c("standard", "redesigned"),
+#'                                 seed = 2026)
+#' head(satisfaction)
+#'
+#' # A retest: same people, same true scores, new measurement error.
+#' retest <- simulate_likert(n = 200, true_score = satisfaction$true_score,
+#'                           group = satisfaction$group, seed = 99)
+#' cor(satisfaction$total, retest$total)  # test-retest reliability
+#'
+#' # Two groups with the SAME latent mean, differing only in spread. On a
+#' # scale with a ceiling, treating the responses as interval finds a
+#' # difference that is not there; treating them as ordinal does not.
+#' ceiling_effect <- simulate_likert(n = 300, group = c("standard", "redesigned"),
+#'                                   group_effect = 0, group_sd = c(1, 2.5),
+#'                                   seed = 41)
+#' t.test(total ~ group, data = ceiling_effect)$p.value      # "significant"
+#' wilcox.test(total ~ group, data = ceiling_effect)$p.value # not significant
+#' tapply(ceiling_effect$true_score, ceiling_effect$group, mean)  # truly equal
+#'
+#' @export
+simulate_likert <- function(n = 200,
+                            n_items = 5,
+                            n_levels = 5,
+                            true_score = NULL,
+                            group = NULL,
+                            group_effect = 0.5,
+                            group_sd = 1,
+                            error_sd = 1,
+                            thresholds = NULL,
+                            equal_spacing = FALSE,
+                            seed = NULL){
+  .simulate_likert(n = n, n_items = n_items, n_levels = n_levels,
+                   true_score = true_score, group = group,
+                   group_effect = group_effect, group_sd = group_sd,
+                   error_sd = error_sd, thresholds = thresholds,
+                   equal_spacing = equal_spacing, seed = seed)
+}

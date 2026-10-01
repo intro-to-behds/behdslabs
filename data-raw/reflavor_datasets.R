@@ -274,7 +274,7 @@ usethis::use_data(app_outage_engagement_impact, overwrite = TRUE)
 # title -> app_name, a short descriptive app name that echoes the film's
 # content, so that the rating structure (clusters, latent factors) stays
 # interpretable. Two sources:
-#   * curated: the ~80 apps the PART2 chapters print or label (regularization,
+#   * curated: the ~90 apps the PART2 chapters print or label (regularization,
 #     latent-factor-models, clustering) are named by hand in
 #     data-raw/app_ratings_curated_names.csv. Franchises keep their numbering
 #     (Star Wars -> "Space saga game IV/V/VI"), and the Godfather films plus

@@ -37,7 +37,7 @@
 #'   Small). \code{userId}, \code{timestamp} and \code{year} are
 #'   unchanged; \code{movieId} -> \code{app_id}; \code{rating} is the
 #'   original 0.5-5 star rating multiplied by 2. \code{title} ->
-#'   \code{app_name}: about 80 apps (those used as examples in the
+#'   \code{app_name}: about 90 apps (those used as examples in the
 #'   companion book) were named by hand to echo the source film's content;
 #'   all other names are generated as "<modifier> <noun> <app_id>", with the
 #'   noun and \code{category} taken from the first listed genre and the

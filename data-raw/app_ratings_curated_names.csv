@@ -1,10 +1,13 @@
 app_id,source_title,app_name,category
 1,"Toy Story","Living toys cartoon app",Kids
+25,"Leaving Las Vegas","Vegas tragic romance app",Entertainment
 32,"Twelve Monkeys (a.k.a. 12 Monkeys)","Time virus thriller game",Games
 47,"Seven (a.k.a. Se7en)","Detective killer hunt game",Games
 50,"Usual Suspects, The","Crime lineup puzzle game",Games
 110,"Braveheart","Highland battle game",Games
+111,"Taxi Driver","Night cab vigilante game",Games
 150,"Apollo 13","Space rescue simulator",Games
+193,"Showgirls","Showgirl dance drama app",Entertainment
 260,"Star Wars: Episode IV - A New Hope","Space saga game IV",Games
 296,"Pulp Fiction","Dark crime comedy app",Entertainment
 318,"Shawshank Redemption, The","Prison escape drama app",Entertainment
@@ -43,9 +46,11 @@ app_id,source_title,app_name,category
 1230,"Annie Hall","Neurotic romcom app",Entertainment
 1240,"Terminator, The","Robot shooter game I",Games
 1252,"Chinatown","Noir detective game",Games
+1258,"Shining, The","Haunted hotel horror game",Games
 1265,"Groundhog Day","Time loop comedy app",Entertainment
 1270,"Back to the Future","Time travel car game",Games
 1291,"Indiana Jones and the Last Crusade","Treasure hunt game III",Games
+1391,"Mars Attacks!","Martian invasion parody game",Games
 1450,"Prisoner of the Mountains (Kavkazsky plennik)","Mountain war drama app",Entertainment
 1552,"Con Air","Prison plane action game",Games
 1563,"Dream With the Fishes","Road trip drama app",Entertainment
@@ -66,8 +71,11 @@ app_id,source_title,app_name,category
 2804,"Christmas Story, A","Christmas family comedy app",Entertainment
 2858,"American Beauty","Suburban drama series app",Entertainment
 2959,"Fight Club","Underground brawler game",Games
+3005,"Bone Collector, The","Forensic killer hunt game",Games
+3052,"Dogma","Irreverent angels comedy app",Entertainment
 3252,"Scent of a Woman","Vesuvio tango game",Games
 3578,"Gladiator","Arena gladiator game",Games
+3623,"Mission: Impossible II","Spy stunt action game II",Games
 3793,"X-Men","Mutant hero team game",Games
 3892,"Anatomy (Anatomie)","Medical horror game",Games
 4076,"Two Ninas","Double dating app",Lifestyle
@@ -75,6 +83,7 @@ app_id,source_title,app_name,category
 4310,"Pearl Harbor","Air raid war game",Games
 4591,"Erik the Viking","Viking comedy quest game",Games
 4796,"Grass Is Greener, The","Country estate romcom app",Entertainment
+4930,"Funeral in Berlin","Cold War spy game",Games
 4993,"Lord of the Rings: The Fellowship of the Ring, The","Fantasy quest RPG I",Games
 5427,"Caveman","Stone age comedy app",Entertainment
 5952,"Lord of the Rings: The Two Towers, The","Fantasy quest RPG II",Games

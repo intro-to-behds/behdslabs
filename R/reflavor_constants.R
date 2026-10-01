@@ -66,6 +66,9 @@
   app_outage_engagement_impact = c(
     daily_active_users = 2
   ),
+  app_ratings = c(
+    rating = 2                          # 0.5-5 stars (half-star steps) -> 1-10 integer score
+  ),
   product_launch_forecast = c(
     samplesize = 2
   ),

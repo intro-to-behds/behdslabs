@@ -1,18 +1,22 @@
 #' App ratings by user, app, and category
 #'
-#' Individual star ratings left by users for apps, with the app's store
-#' category and release year and the rating timestamp. A behavioural-log
-#' dataset for building and evaluating recommender systems (latent-factor
-#' models, user/item effects, regularization).
+#' Individual ratings (1-10 score) left by users for apps, with a short
+#' descriptive app name, the app's store category and release year, and the
+#' rating timestamp. A behavioural-log dataset for building and evaluating
+#' recommender systems (latent-factor models, user/item effects,
+#' regularization).
 #'
 #' \itemize{
 #'   \item app_id. Unique integer ID for the app.
-#'   \item app_name. Anonymized app name (\code{app_<app_id>}).
+#'   \item app_name. Short descriptive app name, unique per app (e.g.
+#'     \code{"Space saga game IV"}, \code{"Romantic comedy video app 5723"}).
+#'     Apps whose name ends in their \code{app_id} have a name generated
+#'     from their source genres; the others were named by hand.
 #'   \item year. Year the app was released.
-#'   \item category. The app's primary store category (a single value
-#'     derived from the source data's first genre; see source).
+#'   \item category. The app's primary store category (a single value,
+#'     consistent with \code{app_name}; see source).
 #'   \item user_id. Unique integer ID for the user.
-#'   \item rating. Star rating between 0 and 5.
+#'   \item rating. Integer score from 1 to 10.
 #'   \item timestamp. Time the rating was given (seconds since epoch).
 #' }
 #'
@@ -30,17 +34,22 @@
 #' Systems (TiiS) 5, 4, Article 19. \doi{10.1145/2827872}
 #'
 #' @source Original \code{dslabs::movielens} values (MovieLens Latest
-#'   Small). \code{userId}, \code{rating}, \code{timestamp} and \code{year}
-#'   are unchanged; \code{movieId} -> \code{app_id}; \code{title} ->
-#'   \code{app_name} (a deterministic anonymized label); the multi-genre
-#'   \code{genres} string is collapsed to a single \code{category} by
-#'   mapping its first genre token through a fixed genre -> store-category
-#'   table.
+#'   Small). \code{userId}, \code{timestamp} and \code{year} are
+#'   unchanged; \code{movieId} -> \code{app_id}; \code{rating} is the
+#'   original 0.5-5 star rating multiplied by 2. \code{title} ->
+#'   \code{app_name}: about 80 apps (those used as examples in the
+#'   companion book) were named by hand to echo the source film's content;
+#'   all other names are generated as "<modifier> <noun> <app_id>", with the
+#'   noun and \code{category} taken from the first listed genre and the
+#'   modifier from the last (\code{data-raw/reflavor_datasets.R}).
 #'
 #' @note These are not real app-rating data. They are the original
-#'   \code{dslabs::movielens} (MovieLens) values, relabeled. A synthetic or
-#'   real, ethically-sourced replacement is planned for a future release
-#'   (see \code{BDS_development_plan.md} Phase 2).
+#'   \code{dslabs::movielens} (MovieLens) values, relabeled and rescaled.
+#'   The app names are invented labels chosen to echo the content of the
+#'   source films, so that the structure in the ratings (clusters of similar
+#'   apps, latent factors) stays interpretable; they do not describe real
+#'   apps. A synthetic or real, ethically-sourced replacement is planned for
+#'   a future release (see \code{BDS_development_plan.md} Phase 2).
 #'
 #' @details
 #' **Teaching connection:** ratings are behavioural logs of preference --

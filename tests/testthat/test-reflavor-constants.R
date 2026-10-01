@@ -12,7 +12,7 @@ test_that(".reflavor_k covers exactly the expected set of scaled datasets", {
       "cognitive_battery_scores", "reported_daily_screen_time",
       "tech_grant_funding_gender_gap", "screen_time_vs_smart_speaker_trend",
       "fitness_app_downloads_by_state", "global_tech_adoption",
-      "app_outage_engagement_impact", "product_launch_forecast",
+      "app_outage_engagement_impact", "app_ratings", "product_launch_forecast",
       "ui_redesign_surveys", "cognitive_task_metrics", "tech_adoption_trends",
       "connectivity_deep_history", "screentime_wellbeing_series")
   )

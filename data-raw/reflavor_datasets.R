@@ -267,34 +267,83 @@ app_outage_engagement_impact <- data.frame(
 usethis::use_data(app_outage_engagement_impact, overwrite = TRUE)
 
 # --- 19. movielens -> app_ratings ------------------------------------
-# userId/rating/timestamp/year preserved exactly. movieId -> app_id
-# (unchanged), title -> a deterministic anonymized app_name, and the
-# multi-genre string is collapsed to a single primary `category` via a
-# fixed genre->category map (apps carry one store category, unlike a
-# film's several genres). fit_recommender_model()'s @examples are a
-# self-contained simulation -- they never referenced movielens -- so no
-# change is needed there.
+# userId/timestamp/year preserved exactly (EXC: IDs and dates); movieId ->
+# app_id (unchanged); rating x2 via .reflavor_k (0.5-5 stars -> 1-10 integer
+# score; a linear rescale, so correlations and clusters are unchanged).
+#
+# title -> app_name, a short descriptive app name that echoes the film's
+# content, so that the rating structure (clusters, latent factors) stays
+# interpretable. Two sources:
+#   * curated: the ~80 apps the PART2 chapters print or label (regularization,
+#     latent-factor-models, clustering) are named by hand in
+#     data-raw/app_ratings_curated_names.csv. Franchises keep their numbering
+#     (Star Wars -> "Space saga game IV/V/VI"), and the Godfather films plus
+#     Scent of a Woman share a fictional studio ("Vesuvio ...") that stands in
+#     for the book's "Al Pacino" factor. The CSV also fixes each curated app's
+#     category, so name and category agree.
+#   * generated: every other app gets "<Modifier> <noun> <app_id>", where the
+#     noun and category come from the first listed genre and the modifier from
+#     the last listed genre (IMAX ignored), e.g. Action|Adventure|Sci-Fi ->
+#     "Sci-fi action game 2628". The app_id suffix keeps names unique.
+# fit_recommender_model()'s @examples are a self-contained simulation -- they
+# never referenced movielens -- so no change is needed there.
 load("data/movielens.rda")
-.genre_to_category <- c(
-  "Action" = "Games", "Adventure" = "Games", "Animation" = "Entertainment",
-  "Children" = "Kids", "Comedy" = "Entertainment", "Crime" = "News",
-  "Documentary" = "Education", "Drama" = "Entertainment", "Fantasy" = "Games",
-  "Film-Noir" = "Entertainment", "Horror" = "Entertainment", "IMAX" = "Entertainment",
-  "Musical" = "Music", "Mystery" = "Entertainment", "Romance" = "Lifestyle",
-  "Sci-Fi" = "Games", "Thriller" = "Entertainment", "War" = "News",
-  "Western" = "Entertainment", "(no genres listed)" = "Uncategorized"
+.genre_noun <- c(
+  "Action" = "action game", "Adventure" = "adventure game",
+  "Animation" = "cartoon app", "Children" = "kids app",
+  "Comedy" = "comedy video app", "Crime" = "crime game",
+  "Documentary" = "documentary app", "Drama" = "drama series app",
+  "Fantasy" = "fantasy RPG", "Film-Noir" = "noir detective game",
+  "Horror" = "horror game", "Musical" = "music app",
+  "Mystery" = "puzzle game", "Romance" = "dating app",
+  "Sci-Fi" = "sci-fi game", "Thriller" = "thriller game",
+  "War" = "war news app", "Western" = "western game"
 )
-.first_genre <- sub("\\|.*$", "", as.character(movielens$genres))
-.ar_category <- unname(.genre_to_category[.first_genre])
-.ar_category[is.na(.ar_category)] <- "Uncategorized"
+.genre_to_category <- c(
+  "Action" = "Games", "Adventure" = "Games", "Animation" = "Kids",
+  "Children" = "Kids", "Comedy" = "Entertainment", "Crime" = "Games",
+  "Documentary" = "Education", "Drama" = "Entertainment", "Fantasy" = "Games",
+  "Film-Noir" = "Games", "Horror" = "Games", "Musical" = "Music",
+  "Mystery" = "Games", "Romance" = "Lifestyle", "Sci-Fi" = "Games",
+  "Thriller" = "Games", "War" = "News", "Western" = "Games"
+)
+.genre_modifier <- c(
+  "Action" = "Action", "Adventure" = "Adventure", "Animation" = "Animated",
+  "Children" = "Family", "Comedy" = "Funny", "Crime" = "Crime",
+  "Documentary" = "Factual", "Drama" = "Story-driven", "Fantasy" = "Fantasy",
+  "Film-Noir" = "Noir", "Horror" = "Scary", "Musical" = "Musical",
+  "Mystery" = "Mystery", "Romance" = "Romantic", "Sci-Fi" = "Sci-fi",
+  "Thriller" = "Suspense", "War" = "War", "Western" = "Western"
+)
+.ar_items <- unique(movielens[, c("movieId", "genres")])
+.ar_genres <- lapply(strsplit(as.character(.ar_items$genres), "|", fixed = TRUE),
+                     setdiff, c("IMAX", "(no genres listed)"))
+.ar_first <- vapply(.ar_genres, function(g) if (length(g)) g[1] else NA_character_, "")
+.ar_last <- vapply(.ar_genres, function(g) if (length(g) > 1) g[length(g)] else NA_character_, "")
+.ar_noun <- ifelse(is.na(.ar_first), "uncategorized app", .genre_noun[.ar_first])
+.ar_label <- ifelse(is.na(.ar_last), .ar_noun,
+                    paste(.genre_modifier[.ar_last], .ar_noun))
+.ar_label <- paste0(toupper(substring(.ar_label, 1, 1)), substring(.ar_label, 2))
+.ar_items$app_name <- paste(.ar_label, .ar_items$movieId)
+.ar_items$category <- ifelse(is.na(.ar_first), "Uncategorized",
+                             .genre_to_category[.ar_first])
+.ar_curated <- read.csv("data-raw/app_ratings_curated_names.csv",
+                        stringsAsFactors = FALSE)
+stopifnot(all(.ar_curated$app_id %in% .ar_items$movieId),
+          !anyDuplicated(.ar_curated$app_id))
+.ar_idx <- match(.ar_curated$app_id, .ar_items$movieId)
+.ar_items$app_name[.ar_idx] <- .ar_curated$app_name
+.ar_items$category[.ar_idx] <- .ar_curated$category
+stopifnot(!anyDuplicated(.ar_items$app_name), !anyNA(.ar_items$category))
+.ar_row <- match(movielens$movieId, .ar_items$movieId)
 app_ratings <- data.frame(
   app_id = movielens$movieId,
-  app_name = paste0("app_", movielens$movieId),
-  year = movielens$year,
-  category = .ar_category,
-  user_id = movielens$userId,
-  rating = movielens$rating,
-  timestamp = movielens$timestamp
+  app_name = .ar_items$app_name[.ar_row],
+  year = movielens$year,                                        # EXC: year
+  category = .ar_items$category[.ar_row],
+  user_id = movielens$userId,                                   # EXC: ID
+  rating = .reflavor_k$app_ratings[["rating"]] * movielens$rating,
+  timestamp = movielens$timestamp                               # EXC: date
 )
 usethis::use_data(app_ratings, overwrite = TRUE)
 

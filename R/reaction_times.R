@@ -1,11 +1,15 @@
 #' Simple reaction times by sex
 #'
-#' Simulated simple-reaction-time measurements (in milliseconds), split by
-#' sex -- commonly used to illustrate distributions and group comparisons.
+#' Simulated mean simple reaction times (in milliseconds) of 1,050
+#' participants, with each participant's sex. Like real reaction-time data,
+#' the distribution has a floor and is right-skewed: most participants
+#' average around 300 ms, and a minority are much slower. Commonly used to
+#' illustrate subsetting, group comparisons, and why the mean and the median
+#' of skewed data differ.
 #'
 #' \itemize{
 #'   \item sex. Male or Female.
-#'   \item rt_ms. Reaction time in milliseconds.
+#'   \item rt_ms. The participant's mean reaction time, in milliseconds.
 #' }
 #'
 #' @docType data
@@ -16,17 +20,22 @@
 #'
 #' @keywords datasets
 #'
-#' @source Linear rescale of \code{dslabs::heights$height} (inches) to a
-#'   200-500ms range via \code{rt_ms = 200 + (height - min) / (max - min) * 300}.
+#' @source Simulated in \code{data-raw/reflavor_datasets.R} with a fixed
+#'   seed, from an ex-Gaussian distribution (normal + exponential), the
+#'   standard descriptive model for reaction times: normal component with
+#'   mean 255 ms (Male) or 265 ms (Female) and SD 25 ms, plus an exponential
+#'   component with mean 60 ms; rounded to 0.1 ms. The \code{sex} column is
+#'   copied unchanged from \code{\link{heights}}.
 #'
-#' @note These values are not real reaction-time data. They are the original
-#'   \code{dslabs::heights} values (Irizarry & Gill), linearly rescaled for
-#'   narrative fit -- the shape of the distribution and the sex comparison
-#'   are unchanged from the original heights data. A synthetic or real,
-#'   ethically-sourced replacement is planned for a future release (see
-#'   \code{BDS_development_plan.md} Phase 2).
+#' @note These are not real reaction-time data. They are simulated to have
+#'   realistic properties (right skew, a floor, a small sex difference with
+#'   men slightly faster). Up to version 0.11.0 this dataset was a linear
+#'   rescale of \code{heights}; that version had a symmetric distribution and
+#'   a large, unrealistic sex difference. For an approximately normal
+#'   variable to practise distributions on, see \code{\link{ux_scores}}.
 #'
 #' @examples
 #' reaction_times |> head()
-#' with(reaction_times, tapply(rt_ms, sex, mean))
+#' with(reaction_times, tapply(rt_ms, sex, median))
+#' with(reaction_times, c(mean = mean(rt_ms), median = median(rt_ms)))
 "reaction_times"

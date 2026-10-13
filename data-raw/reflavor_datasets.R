@@ -6,10 +6,11 @@
 # NUMERIC VALUES: no reflavoured numeric column is byte-identical to its dslabs
 # original (REFLAVORING_PLAN.md ground rule 3). Most scaled columns are the
 # original values times a fixed factor from R/reflavor_constants.R
-# (.reflavor_k), round()ed for counts; two columns use a linear range rescale
-# (.rt_from_height, .rescale_screen_time). Columns kept identical on purpose
-# (dates/year, IDs/weights, bounded proportions, compositional %, opaque
-# feature matrices, free text) are marked "# EXC" below.
+# (.reflavor_k), round()ed for counts; one column uses a linear range rescale
+# (.rescale_screen_time). reaction_times is simulated, not transformed.
+# Columns kept identical on purpose (dates/year, IDs/weights, bounded
+# proportions, compositional %, opaque feature matrices, free text) are
+# marked "# EXC" below.
 #
 # This script is the single source of truth for the transforms. The
 # correspondence tests in tests/testthat/ re-derive the same values from
@@ -29,15 +30,20 @@ app_data_breaches <- data.frame(
 )
 usethis::use_data(app_data_breaches, overwrite = TRUE)
 
-# --- 2. heights -> reaction_times ---------------------------------------
+# --- 2. reaction_times: simulated, NOT a transform of heights -----------
+# Each row is one participant's mean simple reaction time. Values are drawn
+# from an ex-Gaussian (normal + exponential), the standard descriptive model
+# for RT distributions: a floor, most values around 300 ms, and a long right
+# tail of slow participants. Men are ~10 ms faster on average (small effect).
+# The `sex` column is copied from heights unchanged, so released course
+# material that tabulates it (238 Female / 812 Male) still matches.
 load("data/heights.rda")
-.rt_from_height <- function(height) {
-  rng <- range(heights$height)
-  200 + (height - rng[1]) / (rng[2] - rng[1]) * 300
-}
+set.seed(2026)
+.rt_mu <- ifelse(heights$sex == "Male", 255, 265)
 reaction_times <- data.frame(
   sex = heights$sex,
-  rt_ms = .rt_from_height(heights$height)
+  rt_ms = round(rnorm(nrow(heights), .rt_mu, 25) +
+                  rexp(nrow(heights), rate = 1 / 60), 1)
 )
 usethis::use_data(reaction_times, overwrite = TRUE)
 

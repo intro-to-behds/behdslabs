@@ -1,8 +1,14 @@
-test_that("reaction_times$rt_ms matches the documented linear rescale of heights", {
-  rng <- range(heights$height)
-  expected_rt_ms <- 200 + (heights$height - rng[1]) / (rng[2] - rng[1]) * 300
-
+test_that("reaction_times keeps the sex column of heights unchanged", {
   expect_equal(reaction_times$sex, heights$sex)
-  expect_equal(reaction_times$rt_ms, expected_rt_ms)
-  expect_true(all(reaction_times$rt_ms >= 200 & reaction_times$rt_ms <= 500))
+  expect_equal(as.vector(table(reaction_times$sex)), c(238, 812))
+})
+
+test_that("reaction_times$rt_ms has realistic reaction-time properties", {
+  rt <- reaction_times$rt_ms
+  expect_true(all(rt > 150))                     # a floor
+  expect_gt(mean(rt), median(rt))                # right skew
+  expect_gt(mean(rt > 400), 0.05)                # a tail of slow participants
+  med <- tapply(rt, reaction_times$sex, median)
+  expect_lt(med[["Male"]], med[["Female"]])      # men slightly faster
+  expect_lt(med[["Female"]] - med[["Male"]], 40) # ...by a small amount
 })

@@ -13,9 +13,9 @@
 # IDs and weights, proportions/probabilities bounded to [0,1] or [0,100],
 # compositional percentages that sum to ~100, opaque pixel/feature
 # matrices, free text) -- see the "Flagged value exceptions" section of
-# REFLAVORING_PLAN.md. reaction_times$rt_ms and
-# global_tech_adoption$avg_daily_screen_time_hours use a linear range
-# rescale instead of a factor and are handled separately in data-raw.
+# REFLAVORING_PLAN.md. global_tech_adoption$avg_daily_screen_time_hours
+# uses a linear range rescale instead of a factor and is handled separately
+# in data-raw. reaction_times is simulated (see data-raw), not reflavoured.
 #
 # Divide-pairs: in every case the denominator is a kept-identical column,
 # so the numerator's factor is the factor of the derived rate:

@@ -6,8 +6,9 @@
 # NUMERIC VALUES: no reflavoured numeric column is byte-identical to its dslabs
 # original (REFLAVORING_PLAN.md ground rule 3). Most scaled columns are the
 # original values times a fixed factor from R/reflavor_constants.R
-# (.reflavor_k), round()ed for counts; one column uses a linear range rescale
-# (.rescale_screen_time). reaction_times is simulated, not transformed.
+# (.reflavor_k), round()ed for counts; two columns use a linear range rescale
+# (.rescale_screen_time, .ux_from_height). reaction_times is simulated, not
+# transformed.
 # Columns kept identical on purpose (dates/year, IDs/weights, bounded
 # proportions, compositional %, opaque feature matrices, free text) are
 # marked "# EXC" below.
@@ -46,6 +47,20 @@ reaction_times <- data.frame(
                   rexp(nrow(heights), rate = 1 / 60), 1)
 )
 usethis::use_data(reaction_times, overwrite = TRUE)
+
+# --- 2b. heights -> ux_scores -------------------------------------------
+# The real (approximately normal) height distribution, linearly rescaled to a
+# 0-100 UX questionnaire score; sex relabelled as the device used.
+.ux_from_height <- function(height) {
+  rng <- range(heights$height)
+  (height - rng[1]) / (rng[2] - rng[1]) * 100
+}
+ux_scores <- data.frame(
+  device = factor(ifelse(heights$sex == "Male", "desktop", "mobile"),
+                  levels = c("desktop", "mobile")),
+  ux_score = .ux_from_height(heights$height)
+)
+usethis::use_data(ux_scores, overwrite = TRUE)
 
 # --- 3. reported_heights -> wearable_onboarding_height -------------------
 # Kept as a HEIGHT self-report (not screen time): the messy free-text entries

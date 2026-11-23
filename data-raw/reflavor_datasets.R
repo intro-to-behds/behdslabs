@@ -7,8 +7,8 @@
 # original (REFLAVORING_PLAN.md ground rule 3). Most scaled columns are the
 # original values times a fixed factor from R/reflavor_constants.R
 # (.reflavor_k), round()ed for counts; two columns use a linear range rescale
-# (.rescale_screen_time, .ux_from_height). reaction_times is simulated, not
-# transformed.
+# (.rescale_screen_time, .ux_from_height). reaction_times and real_or_ai are
+# simulated, not transformed.
 # Columns kept identical on purpose (dates/year, IDs/weights, bounded
 # proportions, compositional %, opaque feature matrices, free text) are
 # marked "# EXC" below.
@@ -47,6 +47,29 @@ reaction_times <- data.frame(
                   rexp(nrow(heights), rate = 1 / 60), 1)
 )
 usethis::use_data(reaction_times, overwrite = TRUE)
+
+# --- 2a. real_or_ai: simulated, not a transform of any dslabs dataset ------
+# One "real photo or AI-generated?" judgement per participant (n = 600), so
+# the observations are independent. Image type and time pressure are
+# randomised (balanced); AI familiarity is a 0-10 self-rating. True model on
+# the log-odds scale: 1.1 + 0.15 * (familiarity - 5) - 0.7 * pressure
+# - 0.3 * illustration - 0.4 * pressure x illustration.
+set.seed(2027)
+.n_roa <- 600
+.fam <- as.integer(pmin(10, pmax(0, round(rnorm(.n_roa, 5, 2.2)))))
+.img <- factor(sample(rep(c("photo", "illustration"), .n_roa / 2)),
+               levels = c("photo", "illustration"))
+.prs <- factor(sample(rep(c("no", "yes"), .n_roa / 2)), levels = c("no", "yes"))
+.eta <- 1.1 + 0.15 * (.fam - 5) - 0.7 * (.prs == "yes") -
+  0.3 * (.img == "illustration") - 0.4 * (.prs == "yes") * (.img == "illustration")
+real_or_ai <- data.frame(
+  id = seq_len(.n_roa),
+  ai_familiarity = .fam,
+  image_type = .img,
+  time_pressure = .prs,
+  correct = as.integer(rbinom(.n_roa, 1, plogis(.eta)))
+)
+usethis::use_data(real_or_ai, overwrite = TRUE)
 
 # --- 2b. heights -> ux_scores -------------------------------------------
 # The real (approximately normal) height distribution, linearly rescaled to a
